@@ -6,11 +6,12 @@ import './globalStyles.css';
 // Components
 import NavbarComponent from './components/navbar/NavbarComponent';
 // Pages
-import NotFoundPage from './pages/notFoundPage';
-import LoginPage from './pages/loginPage';
-import HomePage from './pages/homePage';
-import HabitsPage from './pages/habitsPage';
-import InsightsPage from './pages/insightsPage';
+import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import HabitsPage from './pages/HabitsPage';
+import InsightsPage from './pages/InsightsPage';
+import AccountPage from './pages/AccountPage';
 // Contexts
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
@@ -36,6 +37,9 @@ const AppWrapper = () => {
 
           {/* Insights */}
           <Route path="/insights" element={<InsightsPage />} />
+
+          {/* Account */}
+          <Route path="/account" element={<AccountPage />} />
 
           {/* Login */}
           <Route path="login" element={<LoginPage />} />

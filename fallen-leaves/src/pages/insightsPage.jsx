@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styles from './css/insightsPage.module.css'
+import styles from './css/InsightsPage.module.css'
 import BarChart from '../components/charts/BarChart'
 import PieChart from '../components/charts/PieChart'
 
@@ -105,6 +105,12 @@ function InsightsPage() {
             </div>
 
             {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+
+            <p className={styles.feedbackHolder}>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam ratione distinctio
+                perspiciatis mollitia explicabo, quia in necessitatibus minus blanditiis natus dolor, cum voluptates!
+                Perspiciatis ipsam accusamus quia obcaecati doloremque similique.
+            </p>
         </div>
     )
 }

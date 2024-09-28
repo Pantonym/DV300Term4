@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './css/habitsPage.module.css'
+import styles from './css/HabitsPage.module.css'
 
 function HabitsPage() {
     return (

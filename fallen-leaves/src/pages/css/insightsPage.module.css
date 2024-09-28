@@ -52,3 +52,15 @@ option {
     width: 450px;
     height: 450px;
 }
+
+.feedbackHolder {
+    background-color: #D75B30;
+    color: white;
+
+    width: 1100px;
+    height: auto;
+
+    padding: 20px;
+
+    border-radius: 15px;
+}
