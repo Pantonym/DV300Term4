@@ -21,7 +21,7 @@ const AppWrapper = () => {
     <>
       {shouldShowNavbar && <NavbarComponent />}
 
-      <div style={{ marginLeft: '175px', padding: '20px' }}>
+      <div style={{ marginLeft: '175px', padding: '30px', paddingLeft: '50px' }}>
         <Routes>
           {/* Protected route for login */}
           {/* <Route path="/" element={<PrivateRoute element={<HomePage />} />} /> */}
