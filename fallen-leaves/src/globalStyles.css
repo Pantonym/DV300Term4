@@ -1,0 +1,24 @@
+.lora_font {
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.inter_font {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+}
+
+body, p {
+    font-family: "Inter", sans-serif;
+    background-color: #F6DFB1;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Lora", serif;
+    font-weight: 200;
+}
