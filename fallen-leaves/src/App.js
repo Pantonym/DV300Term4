@@ -9,6 +9,8 @@ import NavbarComponent from './components/navbar/NavbarComponent';
 import NotFoundPage from './pages/notFoundPage';
 import LoginPage from './pages/loginPage';
 import HomePage from './pages/homePage';
+import HabitsPage from './pages/habitsPage';
+import InsightsPage from './pages/insightsPage';
 // Contexts
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
@@ -25,7 +27,17 @@ const AppWrapper = () => {
         <Routes>
           {/* Protected route for login */}
           {/* <Route path="/" element={<PrivateRoute element={<HomePage />} />} /> */}
+
+          {/* Home */}
           <Route path="/" element={<HomePage />} />
+
+          {/* Habits */}
+          <Route path="/habits" element={<HabitsPage />} />
+
+          {/* Insights */}
+          <Route path="/insights" element={<InsightsPage />} />
+
+          {/* Login */}
           <Route path="login" element={<LoginPage />} />
 
           <Route path="*" element={<NotFoundPage />} />

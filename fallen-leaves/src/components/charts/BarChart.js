@@ -5,28 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 // Register the necessary components from Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function BarChart() {
-    // Dummy data for the chart
-    const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: [
-            {
-                label: 'Habit 1',
-                data: [12, 19, 10, 5, 12, 6],
-                backgroundColor: 'rgba(209, 90, 78, 1)',
-                borderColor: 'rgba(209, 90, 78, 1)',
-                borderWidth: 1,
-            },
-            {
-                label: 'Habit 2',
-                data: [10, 11, 14, 2, 18, 7],
-                backgroundColor: 'rgba(242, 160, 123, 1)',
-                borderColor: 'rgba(242, 160, 123, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
-
+function BarChart({ chartData }) {
     const options = {
         responsive: true,
         plugins: {
@@ -40,7 +19,7 @@ function BarChart() {
         },
     };
 
-    return <Bar data={data} options={options} />;
+    return <Bar data={chartData} options={options} />;
 }
 
 export default BarChart
