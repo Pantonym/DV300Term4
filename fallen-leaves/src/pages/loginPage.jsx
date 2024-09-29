@@ -15,12 +15,13 @@ function LoginPage() {
                 <div className={styles.signUpForm}>
                     <h1 className={styles.fontWhite}>Login</h1>
 
-                    {/* TODO: Align labels to left, make them larger */}
-                    <label>Email</label>
-                    <input type='text'></input>
+                    <div className={styles.AlignLeft}>
+                        <label>Email</label>
+                        <input type='text'></input>
 
-                    <label>Password</label>
-                    <input type='text'></input>
+                        <label>Password</label>
+                        <input type='text'></input>
+                    </div>
 
                     <button className='btnSecondaryDesktop'>Submit</button>
 
@@ -34,14 +35,16 @@ function LoginPage() {
                 <div className={styles.registerForm}>
                     <h1 className={styles.fontWhite}>Register</h1>
 
-                    <label>Username</label>
-                    <input type='text'></input>
+                    <div className={styles.AlignLeft}>
+                        <label>Username</label>
+                        <input type='text'></input>
 
-                    <label>Email</label>
-                    <input type='text'></input>
+                        <label>Email</label>
+                        <input type='text'></input>
 
-                    <label>Password</label>
-                    <input type='text'></input>
+                        <label>Password</label>
+                        <input type='text'></input>
+                    </div>
 
                     <button className='btnSecondaryDesktop'>Submit</button>
 
