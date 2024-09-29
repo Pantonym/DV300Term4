@@ -1,5 +1,5 @@
 .container {
-    width: 1200px;
+    width: 100%;
     height: auto;
 
     display: flex;
@@ -57,10 +57,34 @@ option {
     background-color: #D75B30;
     color: white;
 
-    width: 1100px;
+    width: 70vw;
     height: auto;
 
     padding: 20px;
 
     border-radius: 15px;
+
+    margin-top: 50px;
+}
+
+@media (max-width: 975px) {
+    .pies {
+        flex-direction: column;
+
+        margin-top: 25px;
+    }
+
+    .pieChart {
+        width: 300px;
+        height: 300px;
+    }
+
+    select {
+        width: 150px;
+        margin-top: 25px;
+
+        font-size: 28px;
+
+        align-self: center;
+    }
 }

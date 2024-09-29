@@ -30,3 +30,44 @@ h2 {
 
     border-radius: 15px;
 }
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 975px) {
+    h1 {
+        text-align: center;
+    }
+
+    .cardHolder {
+        display: flex;
+        flex-direction: column;
+
+        width: auto;
+    }
+
+    .card {
+        width: 175px;
+        height: 175px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+
+        background-color: #D75B30;
+
+        border-radius: 15px;
+
+        margin-bottom: 20px;
+    }
+
+    .cardHolder {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        width: 100%;
+        height: auto;
+    }
+}

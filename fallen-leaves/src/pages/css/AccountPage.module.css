@@ -75,3 +75,35 @@
     height: auto;
     width: 120px;
 }
+
+.mobileHeading {
+    display: none;
+    color: black;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 975px) {
+    .arrowImg {
+        display: none;
+    }
+
+    .card {
+        display: none;
+    }
+
+    .mobileHeading {
+        display: flex;
+    }
+
+    .progressCard {
+        height: auto;
+        padding-top: 20px;
+    }
+
+    .progressRow {
+        width: auto;
+        flex-direction: column;
+
+        align-items: center;
+    }
+}

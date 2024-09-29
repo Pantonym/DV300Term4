@@ -68,7 +68,7 @@ function AccountPage() {
 
             <div className={styles.progressContainer}>
                 <div className={styles.progressRow}>
-                    <h2 className={styles.blackFont}>Habits</h2>
+                    <h2 className={`${styles.blackFont} hideOnMobile`}>Habits</h2>
                     <h2 className={styles.blackFont}>Progress</h2>
                 </div>
 
@@ -86,6 +86,7 @@ function AccountPage() {
                         <div className={styles.donutChart}>
                             {donutData1 ? <DonutChart chartData={donutData1} /> : <p>Loading chart data...</p>}
                         </div>
+                        <h2 className={styles.mobileHeading}>Habit Name</h2>
                     </div>
                 </div>
 
@@ -103,6 +104,7 @@ function AccountPage() {
                         <div className={styles.donutChart}>
                             {donutData1 ? <DonutChart chartData={donutData2} /> : <p>Loading chart data...</p>}
                         </div>
+                        <h2 className={styles.mobileHeading}>Habit Name</h2>
                     </div>
                 </div>
             </div>

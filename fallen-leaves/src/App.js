@@ -16,6 +16,8 @@ import AccountPage from './pages/AccountPage';
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
 
+// TODO: Mobile responsiveness
+
 const AppWrapper = () => {
   const location = useLocation();
   const shouldShowNavbar = !['/login'].includes(location.pathname);
@@ -24,22 +26,22 @@ const AppWrapper = () => {
     <>
       {shouldShowNavbar && <NavbarComponent />}
 
-      <div style={{ marginLeft: '175px', padding: '30px', paddingLeft: '50px' }}>
+      <div className='appWrapper'>
         <Routes>
           {/* Protected route for login */}
-          {/* <Route path="/" element={<PrivateRoute element={<HomePage />} />} /> */}
+          <Route path="/" element={<PrivateRoute element={<HomePage />} />} />
 
           {/* Home */}
-          <Route path="/" element={<HomePage />} />
+          {/* <Route path="/" element={<HomePage />} /> */}
 
           {/* Habits */}
-          <Route path="/habits" element={<HabitsPage />} />
+          <Route path="/habits" element={<PrivateRoute element={<HabitsPage />} />} />
 
           {/* Insights */}
-          <Route path="/insights" element={<InsightsPage />} />
+          <Route path="/insights" element={<PrivateRoute element={<InsightsPage />} />} />
 
           {/* Account */}
-          <Route path="/account" element={<AccountPage />} />
+          <Route path="/account" element={<PrivateRoute element={<AccountPage />} />} />
 
           {/* Login */}
           <Route path="login" element={<LoginPage />} />

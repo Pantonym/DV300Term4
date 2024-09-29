@@ -104,7 +104,9 @@ function InsightsPage() {
                 </div>
             </div>
 
-            {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+            <div className='hideOnMobile'>
+                {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+            </div>
 
             <p className={styles.feedbackHolder}>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam ratione distinctio

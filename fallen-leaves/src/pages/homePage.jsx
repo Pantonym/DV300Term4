@@ -38,6 +38,7 @@ function HomePage() {
             {/* TODO: Get username from db */}
             <h1 className='inter_font'>Welcome, USERNAME</h1>
 
+            {/* TODO: Add Habit opens the add habit and entry forms. This could mean turning them into components */}
             <div className={styles.cardHolder}>
                 <div className={styles.card}>
                     <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
@@ -49,14 +50,17 @@ function HomePage() {
                     <h2>Add Entry</h2>
                 </div>
 
+                {/* TODO: Navigate to insights page */}
                 <div className={styles.card}>
                     <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                     <h2>View Insights</h2>
                 </div>
             </div>
 
-            <h1 className='inter_font'>Here are some insights on your habits:</h1>
-            {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+            <div className='hideOnMobile'>
+                <h1 className='inter_font'>Here are some insights on your habits:</h1>
+                {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+            </div>
 
         </div>
     )
