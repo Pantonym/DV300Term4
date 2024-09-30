@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styles from './css/InsightsPage.module.css'
 import BarChart from '../components/charts/BarChart'
 import PieChart from '../components/charts/PieChart'
+import { Oval } from 'react-loader-spinner';
 
 function InsightsPage() {
     const [pieData1, setPieData1] = useState(null);
     const [pieData2, setPieData2] = useState(null);
     const [barData1, setBarData1] = useState(null);
+    // Loading Controller
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Simulate an API call to fetch data
@@ -84,7 +87,17 @@ function InsightsPage() {
         fetchData1();
         fetchData2();
         fetchData3();
+        setLoading(false);
     }, []);
+
+    // Loader
+    if (loading) {
+        return (
+            <div className="loadingContainer">
+                <Oval color="#D75B30" height={80} width={80} />
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>

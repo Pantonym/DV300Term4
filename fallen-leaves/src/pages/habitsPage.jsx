@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './css/HabitsPage.module.css'
+import { Oval } from 'react-loader-spinner';
 
 function HabitsPage() {
     const [entryFormShow, setEntryFormShow] = useState(false);
     const [habitFormShow, setHabitFormShow] = useState(false);
+    // Loading Controller
+    const [loading, setLoading] = useState(true);
 
     // ENTRY FORM
     const handleAddEntryClick = () => {
@@ -22,6 +25,20 @@ function HabitsPage() {
     const handleHabitCancelClick = () => {
         setHabitFormShow(false);
     };
+
+    useEffect(() => {
+        // Data will be gathered here
+        setLoading(false);
+    }, []);
+
+    // Loader
+    if (loading) {
+        return (
+            <div className="loadingContainer">
+                <Oval color="#D75B30" height={80} width={80} />
+            </div>
+        );
+    }
 
     return (
         <div>

@@ -22,9 +22,11 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
+    // Enable persistence
     useEffect(() => {
         const setAuthPersistence = async () => {
             try {
+                // Attempt to set persistence with local persistence supplied by firebase
                 await setPersistence(auth, browserLocalPersistence);
             } catch (error) {
                 console.error('Failed to set persistence:', error);
@@ -33,11 +35,18 @@ export function AuthProvider({ children }) {
         setAuthPersistence();
     }, []);
 
+    // Log In a user
     async function login(email, password) {
         try {
+            // Enable Persistence
             await setPersistence(auth, browserLocalPersistence);
+
+            // Sign In
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            // Update the user's last log in date
             await updateUserLastLogin(userCredential.user.uid);
+
             return userCredential.user;
         } catch (error) {
             console.error('Login Error:', error);
@@ -54,16 +63,23 @@ export function AuthProvider({ children }) {
         }
     }
 
+    // Registers a user
     async function register(email, password, username) {
         try {
+            // Create a userCredential to generate a uID
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+
+            // Create a new user profile using the information supplied
             await createUserProfile({
                 uid: user.uid,
                 email: user.email,
                 username: username
             });
+
+            // Log the user In to enable persistence and routing
             await login(email, password);
+
             return user;
         } catch (error) {
             console.error('AuthProvider - Registration Error:', error);

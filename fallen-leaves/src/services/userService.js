@@ -3,10 +3,11 @@ import { db } from '../firebaseConfig';
 
 const usersCollection = 'Users';
 
+// Creates a user with the details provided
 export const createUserProfile = async (user) => {
     const { uid, email, username } = user;
 
-    // Create a new document in the Users collection
+    // Find the correct user that was just created
     const userDoc = doc(db, usersCollection, uid);
 
     const userData = {
@@ -23,9 +24,12 @@ export const createUserProfile = async (user) => {
     await setDoc(userDoc, userData);
 }
 
+// Change last login date
 export const updateUserLastLogin = async (uid) => {
+    // Find the User
     const userDoc = doc(db, usersCollection, uid);
     await updateDoc(userDoc, {
+        // Change the time stamp to the new login date
         lastLoginDate: serverTimestamp()
     });
 }

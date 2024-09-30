@@ -69,6 +69,13 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 50px;
 }
 
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
 @media (max-width: 975px) {
     .appWrapper {
         margin-left: 0px;

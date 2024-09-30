@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import styles from './css/AccountPage.module.css'
+import { Oval } from 'react-loader-spinner';
 // Images
 import Arrow from '../assets/Arrow.png'
 // Charts
 import DonutChart from '../components/charts/DonutChart'
+import { useAuth } from '../contexts/authContext';
+import { useNavigate } from 'react-router-dom';
 
 function AccountPage() {
+    // Enable navigation
+    const navigate = useNavigate();
+    // User Data
+    const { logout } = useAuth();
+    // Loading Controller
+    const [loading, setLoading] = useState(true);
+
     const [donutData1, setDonutData1] = useState(null);
     const [donutData2, setDonutData2] = useState(null);
 
@@ -57,7 +67,33 @@ function AccountPage() {
 
         fetchData1();
         fetchData2();
+        setLoading(false);
     }, []);
+
+    const handleLogout = async () => {
+        const confirmed = window.confirm('Are you sure you want to log out?');
+
+        if (confirmed) {
+            try {
+                await logout();
+                console.log('Successfully logged out');
+                navigate('/login');
+            } catch (error) {
+                console.error('Logout Error:', error);
+            }
+        } else {
+            console.log('Logout canceled');
+        }
+    };
+
+    // Loader
+    if (loading) {
+        return (
+            <div className="loadingContainer">
+                <Oval color="#D75B30" height={80} width={80} />
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
@@ -107,6 +143,9 @@ function AccountPage() {
                         <h2 className={styles.mobileHeading}>Habit Name</h2>
                     </div>
                 </div>
+
+                <button style={{ alignSelf: 'center' }} className="btnSecondaryDesktop" onClick={handleLogout}>Log Out</button>
+
             </div>
         </div>
     )

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styles from './css/HomePage.module.css'
 import BarChart from '../components/charts/BarChart'
+import { Oval } from 'react-loader-spinner';
 
 function HomePage() {
     const [barData1, setBarData1] = useState(null);
+    // Loading Controller
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Simulate an API call to fetch data
@@ -32,6 +35,20 @@ function HomePage() {
 
         fetchData1();
     }, []);
+
+    useEffect(() => {
+        // Data will be gathered here
+        setLoading(false);
+    }, []);
+
+    // Loader
+    if (loading) {
+        return (
+            <div className="loadingContainer">
+                <Oval color="#D75B30" height={80} width={80} />
+            </div>
+        );
+    }
 
     return (
         <div>

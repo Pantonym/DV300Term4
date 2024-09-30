@@ -59,6 +59,11 @@ input {
     border-radius: 15px;
 
     margin-bottom: 15px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font-size: 18px;
 }
 
 label {
@@ -70,6 +75,14 @@ label {
 
     font-size: 20px;
     margin-bottom: 5px;
+}
+
+.error {
+    background-color: #D75B30;
+    color: white;
+
+    font-size: 18px;
+    text-decoration: underline;
 }
 
 @media (max-width: 975px) {
