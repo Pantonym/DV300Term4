@@ -2,11 +2,38 @@ import React, { useEffect, useState } from 'react'
 import styles from './css/HomePage.module.css'
 import BarChart from '../components/charts/BarChart'
 import { Oval } from 'react-loader-spinner';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
     const [barData1, setBarData1] = useState(null);
+    const [entryFormShow, setEntryFormShow] = useState(false);
+    const [habitFormShow, setHabitFormShow] = useState(false);
     // Loading Controller
     const [loading, setLoading] = useState(true);
+    // Navigation
+    const navigate = useNavigate();
+
+    // ENTRY FORM
+    const handleAddEntryClick = () => {
+        setEntryFormShow(true);
+    };
+
+    const handleEntryCancelClick = () => {
+        setEntryFormShow(false);
+    };
+
+    // HABIT FORM
+    const handleAddHabitClick = () => {
+        setHabitFormShow(true);
+    };
+
+    const handleHabitCancelClick = () => {
+        setHabitFormShow(false);
+    };
+
+    const handleNavigateInsightsPage = () => {
+        navigate('/insights');
+    }
 
     useEffect(() => {
         // Simulate an API call to fetch data
@@ -52,33 +79,79 @@ function HomePage() {
 
     return (
         <div>
-            {/* TODO: Get username from db */}
-            <h1 className='inter_font'>Welcome, USERNAME</h1>
+            {habitFormShow && (
+                <div className={styles.habitsForm}>
+                    <h1 className={styles.fontWhite}>Add Habit</h1>
 
-            {/* TODO: Add Habit opens the add habit and entry forms. This could mean turning them into components */}
-            <div className={styles.cardHolder}>
-                <div className={styles.card}>
-                    <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                    <h2>Add Habit</h2>
+                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`}>
+                        <option value="option1">Habit 1</option>
+                        <option value="option2">Habit 2</option>
+                        <option value="option3">Habit 3</option>
+                    </select>
+
+                    <button className='btnSecondaryDesktop'>Confirm</button>
+                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={handleHabitCancelClick}>
+                        Cancel
+                    </button>
+                </div>
+            )}
+
+            {entryFormShow && (
+                <div className={styles.habitsForm}>
+                    <h1 className={styles.fontWhite}>Add Entry</h1>
+
+                    <select id="habitDropdown" className={`${styles.habitSelect} inter_font`}>
+                        <option value="option1">Habit 1</option>
+                        <option value="option2">Habit 2</option>
+                        <option value="option3">Habit 3</option>
+                    </select>
+                    <input type='number' placeholder={0} min={0} className={styles.sedEntry}></input>
+
+                    <button className='btnSecondaryDesktop'>Confirm</button>
+                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={handleEntryCancelClick}>
+                        Cancel
+                    </button>
+                </div>
+            )}
+
+            <div style={{
+                // Set opacity to 50% when the forms are shown
+                opacity: habitFormShow || entryFormShow ? '50%' : '100%',
+                // Disable interactions when forms are shown
+                pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
+            }}>
+                {/* TODO: Get username from db */}
+                <h1 className='inter_font'>Welcome, USERNAME</h1>
+
+                <div className={styles.cardHolder}>
+                    <div className={styles.card}>
+                        <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                        <button className={`${styles.headingButton} lora_font`} onClick={handleAddHabitClick}>
+                            Add Habit
+                        </button>
+                    </div>
+
+                    <div className={styles.card}>
+                        <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                        <button className={`${styles.headingButton} lora_font`} onClick={handleAddEntryClick}>
+                            Add Entry
+                        </button>
+                    </div>
+
+                    {/* TODO: Navigate to insights page */}
+                    <div className={styles.card}>
+                        <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                        <button className={`${styles.headingButton} lora_font`} onClick={handleNavigateInsightsPage}>
+                            View Insights
+                        </button>
+                    </div>
                 </div>
 
-                <div className={styles.card}>
-                    <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                    <h2>Add Entry</h2>
-                </div>
-
-                {/* TODO: Navigate to insights page */}
-                <div className={styles.card}>
-                    <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                    <h2>View Insights</h2>
+                <div className='hideOnMobile'>
+                    <h1 className='inter_font'>Here are some insights on your habits:</h1>
+                    {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
                 </div>
             </div>
-
-            <div className='hideOnMobile'>
-                <h1 className='inter_font'>Here are some insights on your habits:</h1>
-                {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
-            </div>
-
         </div>
     )
 }
