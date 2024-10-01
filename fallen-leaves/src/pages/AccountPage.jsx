@@ -4,18 +4,19 @@ import { Oval } from 'react-loader-spinner';
 // Images
 import Arrow from '../assets/Arrow.png'
 // Charts
-import DonutChart from '../components/charts/DonutChart'
+import DonutChart from '../components/charts/DonutChart';
+// Authentication & Navigation
 import { useAuth } from '../contexts/authContext';
 import { useNavigate } from 'react-router-dom';
 
 function AccountPage() {
     // Enable navigation
     const navigate = useNavigate();
-    // User Data
-    const { logout } = useAuth();
     // Loading Controller
     const [loading, setLoading] = useState(true);
-
+    // User Data
+    const { logout, currentUser, getUserProfile } = useAuth();
+    const [username, setUsername] = useState("USERNAME");
     const [donutData1, setDonutData1] = useState(null);
     const [donutData2, setDonutData2] = useState(null);
 
@@ -65,11 +66,23 @@ function AccountPage() {
             setDonutData2(dataFromAPI);
         };
 
+        const fetchUsername = async () => {
+            if (currentUser) {
+                getUserProfile(currentUser.uid).then((data) => {
+                    setUsername(data.username);
+                }).catch(error => {
+                    console.error('Error fetching profile info:', error);
+                });
+            }
+        };
+
         fetchData1();
         fetchData2();
+        fetchUsername();
         setLoading(false);
     }, []);
 
+    // Confirm is the user wants to log out, and if they do log out and navigate to the login page
     const handleLogout = async () => {
         const confirmed = window.confirm('Are you sure you want to log out?');
 
@@ -99,7 +112,7 @@ function AccountPage() {
         <div className={styles.container}>
             <div>
                 <div className={styles.profileImage}></div>
-                <h1 className={styles.blackFont}>Username</h1>
+                <h1 className={styles.blackFont}>{username}</h1>
             </div>
 
             <div className={styles.progressContainer}>
@@ -108,6 +121,7 @@ function AccountPage() {
                     <h2 className={styles.blackFont}>Progress</h2>
                 </div>
 
+                {/* Will be automatically populated by a for loop */}
                 <div className={styles.progressRow}>
                     <div className={styles.card}>
                         <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>

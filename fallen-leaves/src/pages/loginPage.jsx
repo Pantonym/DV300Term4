@@ -5,21 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 
 function LoginPage() {
-    // Register Function
-    const { register, login } = useAuth();
     // Enable navigation
     const navigate = useNavigate();
-
+    // Error Displaying
+    const [error, setError] = useState('');
+    // Loading handling
+    const [loading, setLoading] = useState(false);
     // Login/Register Form show/hide
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
     // User Data
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // Error Displaying
-    const [error, setError] = useState('');
-    // Loading handling
-    const [loading, setLoading] = useState(false);
+    const { register, login } = useAuth();
 
     // --Login/Register Form show/hide
     const toggleForm = () => {

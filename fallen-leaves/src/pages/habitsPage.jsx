@@ -3,6 +3,7 @@ import styles from './css/HabitsPage.module.css'
 import { Oval } from 'react-loader-spinner';
 
 function HabitsPage() {
+    // Form Control
     const [entryFormShow, setEntryFormShow] = useState(false);
     const [habitFormShow, setHabitFormShow] = useState(false);
     // Loading Controller

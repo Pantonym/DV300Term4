@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+
+    text-align: center;
+}
+
+.notFound {
+    width: fit-content;
+    height: auto;
+
+    background-color: #D75B30;
+
+    padding: 50px;
+
+    border-radius: 15px;
+}
+
+.header {
+    color: #F6DFB1 !important;
+}
+
+.content {
+    background-color: #D75B30;
+    color: #F6DFB1;
+
+    font-size: large;
+}

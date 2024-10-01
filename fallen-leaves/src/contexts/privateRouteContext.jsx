@@ -6,6 +6,7 @@ import { useAuth } from './authContext';
 const PrivateRoute = ({ element }) => {
     const { currentUser } = useAuth();
 
+    // ReRoute to the login page if the user is not logged in
     return currentUser ? element : <Navigate to="/login" />;
 };
 

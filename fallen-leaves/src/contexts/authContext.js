@@ -14,11 +14,14 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Sets up a listener that monitors whether the user is logged in or not
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+            // Set the current user and stop loading.
             setCurrentUser(user);
             setLoading(false);
         });
 
+        // Stops the listener when the component unmounts. AuthContext wraps the entire app, so it never actually unmounts.
         return unsubscribe;
     }, []);
 
@@ -32,6 +35,7 @@ export function AuthProvider({ children }) {
                 console.error('Failed to set persistence:', error);
             }
         };
+
         setAuthPersistence();
     }, []);
 
@@ -54,8 +58,10 @@ export function AuthProvider({ children }) {
         }
     }
 
+    // Log out a user
     async function logout() {
         try {
+            // Await signing out with userService
             await signOut(auth);
         } catch (error) {
             console.error('Logout Error:', error);
@@ -87,14 +93,17 @@ export function AuthProvider({ children }) {
         }
     }
 
+    // Function to change the user's email with the userService
     function changeEmail(newEmail) {
         return updateEmail(auth.currentUser, newEmail);
     }
 
+    // Function to change the user's password with the userService
     function changePassword(newPassword) {
         return updatePassword(auth.currentUser, newPassword);
     }
 
+    // Supplies the functions and information needed to the rest of the app (that is wrapped by authContext)
     const value = {
         currentUser,
         login,

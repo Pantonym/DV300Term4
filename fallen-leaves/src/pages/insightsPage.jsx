@@ -5,6 +5,7 @@ import PieChart from '../components/charts/PieChart'
 import { Oval } from 'react-loader-spinner';
 
 function InsightsPage() {
+    // User Data
     const [pieData1, setPieData1] = useState(null);
     const [pieData2, setPieData2] = useState(null);
     const [barData1, setBarData1] = useState(null);

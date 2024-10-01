@@ -34,12 +34,14 @@ export const updateUserLastLogin = async (uid) => {
     });
 }
 
+// Gets the profile of the currently logged in user
 export const getUserProfile = async (uid) => {
     const userDoc = doc(db, usersCollection, uid);
     const userSnapshot = await getDoc(userDoc);
     return userSnapshot.exists() ? userSnapshot.data() : null;
 };
 
+// Updates the user profile
 export const updateUserProfile = async (uid, data) => {
     const userDoc = doc(db, usersCollection, uid);
     await setDoc(userDoc, data, { merge: true });

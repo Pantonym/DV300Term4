@@ -79,10 +79,6 @@ function HomePage() {
 
         fetchData1();
         fetchUsername();
-    }, []);
-
-    useEffect(() => {
-        // Data will be gathered here
         setLoading(false);
     }, []);
 
