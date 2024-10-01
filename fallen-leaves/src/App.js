@@ -16,8 +16,6 @@ import AccountPage from './pages/AccountPage';
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
 
-// TODO: Mobile responsiveness
-
 const AppWrapper = () => {
   const location = useLocation();
   const shouldShowNavbar = !['/login'].includes(location.pathname);
@@ -30,9 +28,6 @@ const AppWrapper = () => {
         <Routes>
           {/* Protected route for login */}
           <Route path="/" element={<PrivateRoute element={<HomePage />} />} />
-
-          {/* Home */}
-          {/* <Route path="/" element={<HomePage />} /> */}
 
           {/* Habits */}
           <Route path="/habits" element={<PrivateRoute element={<HabitsPage />} />} />
@@ -56,7 +51,7 @@ const AppWrapper = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router basename="/DV300TERM4">
+      <Router basename="/DV300Term4">
         <AppWrapper />
       </Router>
     </AuthProvider>

@@ -3,17 +3,23 @@ import styles from './css/HomePage.module.css'
 import BarChart from '../components/charts/BarChart'
 import { Oval } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from '../services/userService';
+import { useAuth } from '../contexts/authContext';
 
 function HomePage() {
-    const [barData1, setBarData1] = useState(null);
+    // Form Controls
     const [entryFormShow, setEntryFormShow] = useState(false);
     const [habitFormShow, setHabitFormShow] = useState(false);
     // Loading Controller
     const [loading, setLoading] = useState(true);
     // Navigation
     const navigate = useNavigate();
+    // User Data
+    const { currentUser } = useAuth();
+    const [username, setUsername] = useState("USERNAME");
+    const [barData1, setBarData1] = useState(null);
 
-    // ENTRY FORM
+    // ENTRY FORM CONTROLS
     const handleAddEntryClick = () => {
         setEntryFormShow(true);
     };
@@ -22,7 +28,7 @@ function HomePage() {
         setEntryFormShow(false);
     };
 
-    // HABIT FORM
+    // HABIT FORM CONTROLS
     const handleAddHabitClick = () => {
         setHabitFormShow(true);
     };
@@ -31,6 +37,7 @@ function HomePage() {
         setHabitFormShow(false);
     };
 
+    // Navigate to the insights page
     const handleNavigateInsightsPage = () => {
         navigate('/insights');
     }
@@ -60,7 +67,18 @@ function HomePage() {
             setBarData1(dataFromAPI);
         };
 
+        const fetchUsername = async () => {
+            if (currentUser) {
+                getUserProfile(currentUser.uid).then((data) => {
+                    setUsername(data.username);
+                }).catch(error => {
+                    console.error('Error fetching profile info:', error);
+                });
+            }
+        };
+
         fetchData1();
+        fetchUsername();
     }, []);
 
     useEffect(() => {
@@ -120,28 +138,26 @@ function HomePage() {
                 // Disable interactions when forms are shown
                 pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
             }}>
-                {/* TODO: Get username from db */}
-                <h1 className='inter_font'>Welcome, USERNAME</h1>
+                <h1 className='inter_font'>Welcome, {username}</h1>
 
                 <div className={styles.cardHolder}>
-                    <div className={styles.card}>
+                    <div className={styles.card} onClick={handleAddHabitClick}>
                         <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`} onClick={handleAddHabitClick}>
+                        <button className={`${styles.headingButton} lora_font`} >
                             Add Habit
                         </button>
                     </div>
 
-                    <div className={styles.card}>
+                    <div className={styles.card} onClick={handleAddEntryClick}>
                         <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`} onClick={handleAddEntryClick}>
+                        <button className={`${styles.headingButton} lora_font`}>
                             Add Entry
                         </button>
                     </div>
 
-                    {/* TODO: Navigate to insights page */}
-                    <div className={styles.card}>
+                    <div className={styles.card} onClick={handleNavigateInsightsPage}>
                         <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`} onClick={handleNavigateInsightsPage}>
+                        <button className={`${styles.headingButton} lora_font`}>
                             View Insights
                         </button>
                     </div>

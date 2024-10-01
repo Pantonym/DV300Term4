@@ -178,4 +178,25 @@ h2 {
         width: 100%;
         height: auto;
     }
+
+    .habitSelect {
+        width: 150px;
+        margin-top: 25px;
+
+        font-size: 28px;
+        align-self: center;
+    }
+
+    .habitsForm {
+        left: auto;
+        top: 200px;
+
+        width: 250px;
+    }
+
+    .addHabitSelect {
+        height: 50px;
+
+        font-size: 22px;
+    }
 }
