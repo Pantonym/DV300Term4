@@ -13,7 +13,7 @@ h2 {
 
     margin-top: 10px;
     font-size: 24px;
-    
+
     border: none;
     cursor: pointer;
 }
@@ -104,7 +104,7 @@ h2 {
 }
 
 .addHabitSelect {
-    width: 200px;
+    width: 400px;
 
     align-self: self-start;
 
@@ -131,11 +131,20 @@ h2 {
 }
 
 .addHabitSelect option {
-    background-color: white;
+    color: black;
+}
+
+.habitDescription {
+    background-color: #D75B30;
+    font-size: 20px;
+    color: white;
+}
+
+.habitSelect {
+    width: 400px;
 }
 
 .habitSelect option {
-    background-color: white;
     color: black;
 }
 
@@ -198,5 +207,7 @@ h2 {
         height: 50px;
 
         font-size: 22px;
+
+        width: 200px;
     }
 }
