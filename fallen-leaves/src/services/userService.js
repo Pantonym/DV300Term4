@@ -1,7 +1,7 @@
 import { doc, setDoc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-const usersCollection = 'Users';
+const usersCollection = 'users';
 
 // Creates a user with the details provided
 export const createUserProfile = async (user) => {

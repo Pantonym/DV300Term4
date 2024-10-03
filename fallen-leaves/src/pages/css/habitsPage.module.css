@@ -148,6 +148,12 @@
     border-radius: 15px;
 }
 
+.habitDescription {
+    background-color: #D75B30;
+    font-size: 20px;
+    color: white;
+}
+
 @media (max-width: 975px) {
     .habitSelect {
         width: 150px;

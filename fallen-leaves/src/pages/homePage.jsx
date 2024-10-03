@@ -129,9 +129,9 @@ function HomePage() {
             )}
 
             <div style={{
-                // Set opacity to 50% when the forms are shown
+                // --Set opacity to 50% when the forms are shown
                 opacity: habitFormShow || entryFormShow ? '50%' : '100%',
-                // Disable interactions when forms are shown
+                // --Disable interactions when forms are shown
                 pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
             }}>
                 <h1 className='inter_font'>Welcome, {username}</h1>
