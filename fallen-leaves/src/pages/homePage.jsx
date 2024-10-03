@@ -5,6 +5,7 @@ import { Oval } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../services/userService';
 import { useAuth } from '../contexts/authContext';
+import { getUserHabits } from '../services/habitService';
 
 function HomePage() {
     // Form Controls
@@ -17,25 +18,7 @@ function HomePage() {
     // User Data
     const { currentUser } = useAuth();
     const [username, setUsername] = useState("USERNAME");
-    const [barData1, setBarData1] = useState(null);
-
-    // ENTRY FORM CONTROLS
-    const handleAddEntryClick = () => {
-        setEntryFormShow(true);
-    };
-
-    const handleEntryCancelClick = () => {
-        setEntryFormShow(false);
-    };
-
-    // HABIT FORM CONTROLS
-    const handleAddHabitClick = () => {
-        setHabitFormShow(true);
-    };
-
-    const handleHabitCancelClick = () => {
-        setHabitFormShow(false);
-    };
+    const [barData, setBarData] = useState(null);
 
     // Navigate to the insights page
     const handleNavigateInsightsPage = () => {
@@ -43,29 +26,53 @@ function HomePage() {
     }
 
     useEffect(() => {
-        // Simulate an API call to fetch data
-        const fetchData1 = async () => {
-            const dataFromAPI = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                datasets: [
-                    {
-                        label: 'Habit 1',
-                        data: [12, 19, 10, 5, 12, 6],
-                        backgroundColor: 'rgba(209, 90, 78, 1)',
-                        borderColor: 'rgba(209, 90, 78, 1)',
-                        borderWidth: 1,
-                    },
-                    {
-                        label: 'Habit 2',
-                        data: [10, 11, 14, 2, 18, 7],
-                        backgroundColor: 'rgba(242, 160, 123, 1)',
-                        borderColor: 'rgba(242, 160, 123, 1)',
-                        borderWidth: 1,
-                    },
-                ],
-            };
-            setBarData1(dataFromAPI);
+        const fetchUserHabitsData = async () => {
+            if (currentUser) {
+                try {
+                    // TODO: Scaling based on the data set with the smallest numbers
+                    // TODO: Change labels to include the units each item is made of
+                    const userHabits = await getUserHabits(currentUser.uid);
+
+                    // Use only the first two habits
+                    const firstTwoHabits = userHabits.slice(0, 2);
+
+                    // Prepare the data for the BarChart
+                    const chartData = {
+                        labels: [],
+                        datasets: []
+                    };
+
+                    // Loop through the first two habits
+                    firstTwoHabits.forEach((habit, index) => {
+                        // --Take the first 6 entries from each habit
+                        const firstSixEntries = habit.entries.slice(0, 6);
+
+                        // --Create labels from the entry dates
+                        const labels = firstSixEntries.map(entry =>
+                            new Date(entry.date.toDate ? entry.date.toDate() : entry.date).toLocaleDateString()
+                        );
+
+                        // --Add to chart data
+                        chartData.labels = labels;
+                        chartData.datasets.push({
+                            label: habit.habitName,
+                            data: firstSixEntries.map(entry => entry.value),
+                            backgroundColor: index === 0 ? 'rgba(209, 90, 78, 1)' : 'rgba(242, 160, 123, 1)',
+                            borderColor: index === 0 ? 'rgba(209, 90, 78, 1)' : 'rgba(242, 160, 123, 1)',
+                            borderWidth: 1,
+                        });
+                    });
+
+                    setBarData(chartData);
+                } catch (error) {
+                    console.error('Error fetching habits:', error);
+                } finally {
+                    setLoading(false);
+                }
+            }
         };
+
+        fetchUserHabitsData();
 
         const fetchUsername = async () => {
             if (currentUser) {
@@ -77,7 +84,7 @@ function HomePage() {
             }
         };
 
-        fetchData1();
+
         fetchUsername();
         setLoading(false);
     }, []);
@@ -104,7 +111,7 @@ function HomePage() {
                     </select>
 
                     <button className='btnSecondaryDesktop'>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={handleHabitCancelClick}>
+                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
                         Cancel
                     </button>
                 </div>
@@ -122,7 +129,7 @@ function HomePage() {
                     <input type='number' placeholder={0} min={0} className={styles.sedEntry}></input>
 
                     <button className='btnSecondaryDesktop'>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={handleEntryCancelClick}>
+                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
                         Cancel
                     </button>
                 </div>
@@ -137,14 +144,14 @@ function HomePage() {
                 <h1 className='inter_font'>Welcome, {username}</h1>
 
                 <div className={styles.cardHolder}>
-                    <div className={styles.card} onClick={handleAddHabitClick}>
+                    <div className={styles.card} onClick={() => setHabitFormShow(true)}>
                         <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                         <button className={`${styles.headingButton} lora_font`} >
                             Add Habit
                         </button>
                     </div>
 
-                    <div className={styles.card} onClick={handleAddEntryClick}>
+                    <div className={styles.card} onClick={() => setEntryFormShow(true)}>
                         <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                         <button className={`${styles.headingButton} lora_font`}>
                             Add Entry
@@ -161,7 +168,7 @@ function HomePage() {
 
                 <div className='hideOnMobile'>
                     <h1 className='inter_font'>Here are some insights on your habits:</h1>
-                    {barData1 ? <BarChart chartData={barData1} /> : <p>Loading chart data...</p>}
+                    {barData ? <BarChart chartData={barData} /> : <p>Loading chart data...</p>}
                 </div>
             </div>
         </div>

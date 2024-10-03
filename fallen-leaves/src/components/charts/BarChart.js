@@ -13,7 +13,7 @@ function BarChart({ chartData }) {
                 position: 'top',
             },
             title: {
-                display: true,
+                display: false,
                 text: 'Monthly Habit Completion',
             },
         },
