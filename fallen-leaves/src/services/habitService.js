@@ -1,5 +1,5 @@
 import { db } from '../firebaseConfig';
-import { collection, addDoc, getDocs, query, where, updateDoc, arrayUnion, doc  } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, updateDoc, arrayUnion, doc } from 'firebase/firestore';
 
 // Collection reference
 const usersCollection = 'users';
@@ -64,4 +64,24 @@ export const addEntryToHabit = async (userId, habitId, entry) => {
         console.error('Error adding entry:', error);
         throw new Error('Failed to add entry');
     }
+};
+
+// Format the entries data to send to the AI's API
+export const formatForApi = (habitData) => {
+    // --Ensures the entries are an array
+    const entries = Array.isArray(habitData.entries) ? habitData.entries : [];
+
+    // --Structure the habit data in a more readable format to help the AI not become confused
+    const formattedEntries = entries.map(entry => {
+        const formattedDate = entry.date.toDate ? entry.date.toDate().toLocaleDateString() : entry.date; // ----Convert the Timestamp to a readable date
+        return `Date: ${formattedDate}, Value: ${entry.value} ${entry.unit}`;
+    }).join('\n');
+
+    // --Format the habit data to be more readable for the API
+    return `
+    Habit Name: ${habitData.habitName}
+    Habit Goal: ${habitData.habitGoal}
+    Entries:
+    ${formattedEntries}
+    `;
 };

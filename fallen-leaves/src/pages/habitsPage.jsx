@@ -3,6 +3,7 @@ import styles from './css/HabitsPage.module.css'
 import { Oval } from 'react-loader-spinner';
 import { addEntryToHabit, addNewHabit, checkHabitExists, getUserHabits } from '../services/habitService';
 import { useAuth } from '../contexts/authContext';
+import { callOpenAiAPI } from '../services/insightsService';
 
 function HabitsPage() {
     // Form Control
@@ -20,6 +21,10 @@ function HabitsPage() {
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [unit, setUnit] = useState('');
     const [entryValue, setEntryValue] = useState(0);
+    const [formattedData, setFormattedData] = useState(null);
+    const [insight, setInsight] = useState('');
+    const [goal, setGoal] = useState('');
+    const [title, setTitle] = useState('');
 
     // --Collect user info
     useEffect(() => {
@@ -39,6 +44,10 @@ function HabitsPage() {
             if (userHabits.length > 0) {
                 const firstHabit = userHabits[0];
                 setSelectedHabitToDisplay(firstHabit);
+
+                // // Format the data for the api
+                // setFormattedData(formatForApi(firstHabit));
+
                 // --Set the habit's entries & the proper unit of measurement
                 setEntries(firstHabit.entries);
                 setUnit(habitUnits[firstHabit.habitName]);
@@ -113,6 +122,8 @@ function HabitsPage() {
         setEntryValue(e.target.value);
     };
 
+    // TODO: Recalculate the current amount in the insights matching the active one
+    // TODO: Regenerate a new insight if the user finishes their goal
     // --Add an entry
     const handleAddEntrySubmissionClick = async () => {
         console.log('Selected habit to display:', selectedHabitToDisplay);
@@ -149,6 +160,41 @@ function HabitsPage() {
         }
     };
 
+    // Generate an insight and goal with the AI - EXPERIMENTAL, WON'T WORK YET
+    const handleGenerateInsight = async () => {
+        try {
+            // Call the OpenAI API to generate insights
+            const apiResponse = await callOpenAiAPI(formattedData);
+
+            // Extract the goal using regex
+            const goalMatch = apiResponse.match(/\[GOAL:\s*(.*?)\]/);
+
+            // If a goal is found, display it
+            if (goalMatch && goalMatch[1]) {
+                setGoal(goalMatch[1]);
+                console.log('Goal: ', goal);
+            }
+
+            // Extract the title using regex
+            const titleMatch = apiResponse.match(/\[TITLE:\s*(.*?)\]/);
+
+            // If a title is found, display it
+            if (titleMatch && titleMatch[1]) {
+                setTitle(titleMatch[1]);
+                console.log('Title: ', title);
+            }
+
+            // Save the new insight to a usestate
+            setInsight(apiResponse);
+            console.log('AI Insights:', apiResponse);
+            console.log('AI Insights useState:', insight);
+
+            // TODO: Build the data to be saved to the db
+        } catch (error) {
+            console.error('Error generating insight:', error);
+        }
+    };
+
     // ENTRIES TABLE
     // --Handle habit change for the displaying of entry data
     const handleHabitDisplayChange = (e) => {
@@ -156,8 +202,12 @@ function HabitsPage() {
         const selected = habits.find(habit => habit.id === habitId);
         setSelectedHabitToDisplay(selected);
 
+        // // Format the data for the api
+        // setFormattedData(formatForApi(selected));
+
         // Update entries based on the selected habit
         setEntries(selected ? selected.entries : []);
+        console.log(entries);
 
         // Set the unit based on the selected habit
         if (selected) {
