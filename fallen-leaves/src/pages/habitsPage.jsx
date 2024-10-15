@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styles from './css/HabitsPage.module.css'
 import { Oval } from 'react-loader-spinner';
-import { addEntryToHabit, addNewHabit, checkHabitExists, getUserHabits } from '../services/habitService';
+import { addEntryToHabit, addNewHabit, checkHabitExists, formatForApi, getUserHabits } from '../services/habitService';
 import { useAuth } from '../contexts/authContext';
-import { callOpenAiAPI } from '../services/insightsService';
+import { addInsight, callOpenAiAPI, getUserInsights, updateInsight } from '../services/insightsService';
 
 function HabitsPage() {
     // Form Control
@@ -17,12 +17,13 @@ function HabitsPage() {
     const { currentUser } = useAuth();
     const [userID, setUserID] = useState();
     const [habits, setHabits] = useState([]);
+    const [insights, setInsights] = useState([]);
     const [entries, setEntries] = useState([]);
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [unit, setUnit] = useState('');
     const [entryValue, setEntryValue] = useState(0);
-    const [formattedData, setFormattedData] = useState(null);
-    const [insight, setInsight] = useState('');
+    const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState(''); // --Gets the active insight from the insights collection
+    const [insight, setInsight] = useState(''); // --For the newly generated insight text form the api
     const [goal, setGoal] = useState('');
     const [title, setTitle] = useState('');
 
@@ -30,36 +31,82 @@ function HabitsPage() {
     useEffect(() => {
         if (currentUser) {
             setUserID(currentUser.uid);
-            fetchUserHabits(currentUser.uid);
+            fetchUserData(currentUser.uid);
         }
     }, [currentUser]);
 
-    // Collect user habits from the service
-    const fetchUserHabits = async (uid) => {
+    //  SECTION: Fetch the user's data
+    const fetchUserData = async (uid) => {
         try {
+            // Fetch insights and filter to get only those with completed == false
+            const userInsights = await getUserInsights(uid);
+            const activeInsights = userInsights.filter(insight => !insight.completed);
+            setInsights(activeInsights);  // --Set only uncompleted insights
+
+            // Fetch habits after insights are available
             const userHabits = await getUserHabits(uid);
-            setHabits(userHabits);
+            setHabits(userHabits); // --For display in the dropdown
 
             // Automatically set the first habit as the default selected habit
             if (userHabits.length > 0) {
                 const firstHabit = userHabits[0];
+
+                // --Find an active insight for the first habit
+                const activeInsight = findActiveInsightForHabit(firstHabit.id, userInsights);
+                setSelectedInsightToDisplay(activeInsight); // ----Store the active insight
+
+                // --If there is an active insight, filter entries based on the insight's dateAdded field
+                if (activeInsight) {
+                    const insightDate = activeInsight.dateAdded.toDate(); // ----Convert Firestore Timestamp to Date
+
+                    // ----Filter entries made after the insight's dateAdded
+                    const filteredEntries = firstHabit.entries.filter(entry => {
+                        const entryDate = entry.date.toDate ? entry.date.toDate() : entry.date;  // ------Handle Timestamp conversion
+                        return entryDate > insightDate;  // ------Only include entries after the insight was created
+                    });
+
+                    // ----Set the filtered entries for the selected habit
+                    setEntries(filteredEntries);
+                } else {
+                    // If there is no active insight, set all entries
+                    setEntries(firstHabit.entries);
+                }
+
+                // --Set the selected habit
                 setSelectedHabitToDisplay(firstHabit);
 
-                // // Format the data for the api
-                // setFormattedData(formatForApi(firstHabit));
-
-                // --Set the habit's entries & the proper unit of measurement
-                setEntries(firstHabit.entries);
+                // --Set the proper unit of measurement
                 setUnit(habitUnits[firstHabit.habitName]);
             }
 
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching habits:', error);
+            console.error('Error fetching data:', error);
         }
     };
 
-    // HABIT LORE
+    // Listen for changes in selectedInsightToDisplay
+    // This is because it is asynchronous and will not be set in time, so it has to be updated when the insight is ready.
+    useEffect(() => {
+        if (selectedInsightToDisplay) {
+            console.log("Selected Insight has been updated:", selectedInsightToDisplay.insightTitle);
+        }
+    }, [selectedInsightToDisplay]); // --This will run whenever selectedInsightToDisplay is updated
+
+    // Find the insight that matches the active habit
+    const findActiveInsightForHabit = (habitId, insights) => {
+        // --Return null if no insights or habitId is provided
+        if (!habitId || !insights || insights.length === 0) {
+            return null;
+        }
+
+        // --Find the insight with matching habit ID and where completed is false
+        const matchingInsight = insights.find(insight => insight.userHabitID === habitId && insight.completed === false);
+
+        return matchingInsight || null;
+    };
+
+    // SECTION: HABIT LORE
     // --Habit Descriptions
     const habitDescriptions = {
         recycling: 'Recycling helps reduce waste by converting materials into reusable objects.',
@@ -77,20 +124,20 @@ function HabitsPage() {
         reusableBags: 'count'
     };
 
-    // HABIT FORM
-    // --Handle habit selection
+    // SECTION: HABIT FORM
+    // Handle habit selection
     const handleHabitChange = (e) => {
         setSelectedHabit(e.target.value);
     };
 
-    // --Handle goal selection
+    // Handle goal selection
     const handleGoalChange = (e) => {
         setSelectedGoal(e.target.value);
     };
 
-    // --Habit confirm click
+    // Habit confirm click
     const handleHabitConfirmClick = async () => {
-        // Check if a habit is selected
+        // --Check if a habit is selected
         if (selectedHabit === '') {
             alert('Please select a habit.');
             return;
@@ -99,14 +146,14 @@ function HabitsPage() {
         try {
             console.log(userID);
 
-            // Check if the habit already exists
+            // --Check if the habit already exists
             const habitExists = await checkHabitExists(userID, selectedHabit);
             if (habitExists) {
                 alert('You already have this habit.');
                 return;
             }
 
-            // Add the habit if it doesn't already exist
+            // --Add the habit if it doesn't already exist
             await addNewHabit(userID, selectedHabit, selectedGoal);
             alert('Habit added successfully!');
             setHabitFormShow(false);
@@ -116,15 +163,13 @@ function HabitsPage() {
         }
     };
 
-    // ENTRY FORM
-    // --Entry value change
+    // SECTION: ENTRY FORM
+    // Entry value change
     const handleEntryValueChange = (e) => {
         setEntryValue(e.target.value);
     };
 
-    // TODO: Recalculate the current amount in the insights matching the active one
-    // TODO: Regenerate a new insight if the user finishes their goal
-    // --Add an entry
+    // Add an entry
     const handleAddEntrySubmissionClick = async () => {
         console.log('Selected habit to display:', selectedHabitToDisplay);
         console.log('User ID:', userID);
@@ -147,12 +192,29 @@ function HabitsPage() {
                 unit: unit
             };
 
-            // Add the entry to the Firestore document for the selected habit
+            // --Recalculate the current amount in the insights collection matching the active one
+            if (selectedInsightToDisplay && selectedInsightToDisplay.id) {
+                console.log("Updating Insight:", selectedInsightToDisplay.id);
+                const newCurrent = selectedInsightToDisplay.current + parseFloat(entryValue);
+                console.log('New Current:', newCurrent);
+
+                // ----Update the current progress in the Firestore document for the insight
+                await updateInsight(userID, selectedInsightToDisplay.id, { current: newCurrent });
+
+                // If goal is completed, generate a new insight
+                if (newCurrent >= selectedInsightToDisplay.suggestedGoal) {
+                    await updateInsight(userID, selectedInsightToDisplay.id, { completed: true });
+                    handleGenerateInsight(); // Call to generate a new insight
+                }
+            }
+
+            // --Add the entry to the Firestore document for the selected habit
             await addEntryToHabit(userID, selectedHabitToDisplay.id, newEntry);
 
-            // Update the displayed entries for the selected habit
+            // --Update the displayed entries for the selected habit
             setEntries([...entries, newEntry]);
-            setEntryFormShow(false); // Close the form
+            setEntryFormShow(false); // ----Close the form
+
             alert('Entry added successfully!');
         } catch (error) {
             console.error('Error adding entry:', error);
@@ -160,57 +222,94 @@ function HabitsPage() {
         }
     };
 
-    // Generate an insight and goal with the AI - EXPERIMENTAL, WON'T WORK YET
+    // SECTION: Generate insights
     const handleGenerateInsight = async () => {
         try {
+            // Ensure the habit data is formatted correctly for the API
+            const formattedHabitData = formatForApi(selectedHabitToDisplay);
+            console.log(formattedHabitData);
+
             // Call the OpenAI API to generate insights
-            const apiResponse = await callOpenAiAPI(formattedData);
+            const apiResponse = await callOpenAiAPI(formattedHabitData);
+            console.log(apiResponse);
 
             // Extract the goal using regex
             const goalMatch = apiResponse.match(/\[GOAL:\s*(.*?)\]/);
 
             // If a goal is found, display it
+            let extractedGoal = null;
             if (goalMatch && goalMatch[1]) {
-                setGoal(goalMatch[1]);
-                console.log('Goal: ', goal);
+                extractedGoal = goalMatch[1];
+                setGoal(extractedGoal);
+                console.log('Extracted Goal: ', extractedGoal);
             }
 
             // Extract the title using regex
             const titleMatch = apiResponse.match(/\[TITLE:\s*(.*?)\]/);
 
             // If a title is found, display it
+            let extractedTitle = null;
             if (titleMatch && titleMatch[1]) {
-                setTitle(titleMatch[1]);
-                console.log('Title: ', title);
+                extractedTitle = titleMatch[1];
+                setTitle(extractedTitle);
+                console.log('Extracted Title: ', extractedTitle);
             }
 
-            // Save the new insight to a usestate
-            setInsight(apiResponse);
-            console.log('AI Insights:', apiResponse);
-            console.log('AI Insights useState:', insight);
+            // Remove the goal and title lines from the response text
+            const cleanedApiResponse = apiResponse
+                .replace(/\[GOAL:\s*(.*?)\]/, '')    // Remove goal line
+                .replace(/\[TITLE:\s*(.*?)\]/, '');  // Remove title line
 
-            // TODO: Build the data to be saved to the db
+            // If both title and goal were extracted, save the new insight to Firestore
+            if (extractedGoal && extractedTitle) {
+                await addInsight(
+                    userID,
+                    selectedHabitToDisplay.id,  // Habit ID
+                    extractedTitle,  // Insight Title
+                    cleanedApiResponse,  // Full response from OpenAI
+                    extractedGoal,   // Goal from OpenAI
+                    0                // Initial progress
+                );
+                console.log('New insight saved successfully!');
+                // Fetch the data again to refresh the table
+                fetchUserData(currentUser.uid);
+            }
+
         } catch (error) {
             console.error('Error generating insight:', error);
         }
     };
 
-    // ENTRIES TABLE
+    // SECTION: ENTRIES TABLE
     // --Handle habit change for the displaying of entry data
     const handleHabitDisplayChange = (e) => {
         const habitId = e.target.value;
         const selected = habits.find(habit => habit.id === habitId);
         setSelectedHabitToDisplay(selected);
 
-        // // Format the data for the api
-        // setFormattedData(formatForApi(selected));
+        // --Find an active insight for the selected habit
+        const activeInsight = findActiveInsightForHabit(habitId, insights);
+        setSelectedInsightToDisplay(activeInsight); // Store the active insight
 
-        // Update entries based on the selected habit
-        setEntries(selected ? selected.entries : []);
-        console.log(entries);
-
-        // Set the unit based on the selected habit
         if (selected) {
+            // --If there is an active insight, filter the entries based on the insight's dateAdded
+            if (activeInsight) {
+                const insightDate = activeInsight.dateAdded.toDate(); // ----Convert Firestore Timestamp to Date
+
+                // ----Filter entries made after the insight's dateAdded
+                const filteredEntries = selected.entries.filter(entry => {
+                    const entryDate = entry.date.toDate ? entry.date.toDate() : entry.date;  // ------Handle Timestamp conversion
+                    return entryDate > insightDate;  // ------Only include entries after the insight was created
+                });
+
+                // ----Set the filtered entries for the selected habit
+                setEntries(filteredEntries);
+            } else {
+                // ----If there is no active insight, set all entries
+                setEntries(selected.entries);
+            }
+
+            // --Set the unit based on the selected habit
             setUnit(habitUnits[selected.habitName]); // Use habitName to get the corresponding unit
         }
     }
