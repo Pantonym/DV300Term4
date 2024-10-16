@@ -224,6 +224,7 @@ function HabitsPage() {
 
     // SECTION: Generate insights
     const handleGenerateInsight = async () => {
+        setLoading(true);
         try {
             // Ensure the habit data is formatted correctly for the API
             const formattedHabitData = formatForApi(selectedHabitToDisplay);
@@ -239,7 +240,7 @@ function HabitsPage() {
             // If a goal is found, display it
             let extractedGoal = null;
             if (goalMatch && goalMatch[1]) {
-                extractedGoal = goalMatch[1];
+                extractedGoal = parseInt(goalMatch[1], 10); // Convert the string to an integer
                 setGoal(extractedGoal);
                 console.log('Extracted Goal: ', extractedGoal);
             }
@@ -273,11 +274,14 @@ function HabitsPage() {
                 console.log('New insight saved successfully!');
                 // Fetch the data again to refresh the table
                 fetchUserData(currentUser.uid);
+            } else {
+                console.log('An error occurred when extracting the goal & title');
             }
 
         } catch (error) {
             console.error('Error generating insight:', error);
         }
+        setLoading(false);
     };
 
     // SECTION: ENTRIES TABLE

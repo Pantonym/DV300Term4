@@ -303,21 +303,21 @@ function HomePage() {
                 <h1 className='inter_font'>Welcome, {username}</h1>
 
                 <div className={styles.cardHolder}>
-                    <div className={styles.card} onClick={() => setHabitFormShow(true)}>
+                    <div className={styles.card} style={{ backgroundColor: '#C291D6' }} onClick={() => setHabitFormShow(true)}>
                         <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                         <button className={`${styles.headingButton} lora_font`} >
                             Add Habit
                         </button>
                     </div>
 
-                    <div className={styles.card} onClick={() => setEntryFormShow(true)}>
+                    <div className={styles.card} style={{ backgroundColor: '#8BC594' }} onClick={() => setEntryFormShow(true)}>
                         <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                         <button className={`${styles.headingButton} lora_font`}>
                             Add Entry
                         </button>
                     </div>
 
-                    <div className={styles.card} onClick={handleNavigateInsightsPage}>
+                    <div className={styles.card} style={{ backgroundColor: '#7A9CC3' }} onClick={handleNavigateInsightsPage}>
                         <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                         <button className={`${styles.headingButton} lora_font`}>
                             View Insights

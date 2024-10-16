@@ -85,55 +85,58 @@ function LoginPage() {
     }
 
     return (
-        <div className={styles.container}>
-            {/* Login Form */}
-            {isLoginFormVisible && (
-                <div className={styles.signUpForm}>
-                    <h1 className={styles.fontWhite}>Login</h1>
+        <div>
+            <div className={styles.bodyBG}></div>
+            <div className={styles.container}>
+                {/* Login Form */}
+                {isLoginFormVisible && (
+                    <div className={styles.signUpForm}>
+                        <h1 className={styles.fontWhite}>Login</h1>
 
-                    {/* Error display */}
-                    {error && <p className={styles.error}>! {error} !</p>}
+                        {/* Error display */}
+                        {error && <p className={styles.error}>! {error} !</p>}
 
-                    <div className={styles.AlignLeft}>
-                        <label>Email</label>
-                        <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <div className={styles.AlignLeft}>
+                            <label>Email</label>
+                            <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
 
-                        <label>Password</label>
-                        <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <label>Password</label>
+                            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+
+                        <button className='btnSecondaryDesktop' onClick={handleSignup} disabled={loading}>Submit</button>
+
+                        <p className={styles.btnSwitchLabel}>Don't have an account?</p>
+                        <button className={styles.btnSwitch} onClick={toggleForm} disabled={loading}>Register</button>
                     </div>
+                )}
 
-                    <button className='btnSecondaryDesktop' onClick={handleSignup} disabled={loading}>Submit</button>
+                {/* Register Form */}
+                {!isLoginFormVisible && (
+                    <div className={styles.registerForm}>
+                        <h1 className={styles.fontWhite}>Register</h1>
 
-                    <p className={styles.btnSwitchLabel}>Don't have an account?</p>
-                    <button className={styles.btnSwitch} onClick={toggleForm} disabled={loading}>Register</button>
-                </div>
-            )}
+                        {/* Error display */}
+                        {error && <p className={styles.error}>! {error} !</p>}
 
-            {/* Register Form */}
-            {!isLoginFormVisible && (
-                <div className={styles.registerForm}>
-                    <h1 className={styles.fontWhite}>Register</h1>
+                        <div className={styles.AlignLeft}>
+                            <label>Username</label>
+                            <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
 
-                    {/* Error display */}
-                    {error && <p className={styles.error}>! {error} !</p>}
+                            <label>Email</label>
+                            <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
 
-                    <div className={styles.AlignLeft}>
-                        <label>Username</label>
-                        <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
+                            <label>Password</label>
+                            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div>
 
-                        <label>Email</label>
-                        <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <button className='btnSecondaryDesktop' onClick={handleRegister} disabled={loading}>Submit</button>
 
-                        <label>Password</label>
-                        <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <p className={styles.btnSwitchLabel}>Already have an account?</p>
+                        <button className={styles.btnSwitch} onClick={toggleForm} disabled={loading}>Sign In</button>
                     </div>
-
-                    <button className='btnSecondaryDesktop' onClick={handleRegister} disabled={loading}>Submit</button>
-
-                    <p className={styles.btnSwitchLabel}>Already have an account?</p>
-                    <button className={styles.btnSwitch} onClick={toggleForm} disabled={loading}>Sign In</button>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     )
 }

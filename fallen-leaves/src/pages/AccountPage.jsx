@@ -8,6 +8,9 @@ import DonutChart from '../components/charts/DonutChart';
 // Authentication & Navigation
 import { useAuth } from '../contexts/authContext';
 import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from '../services/userService';
+import { getUserInsights } from '../services/insightsService';
+import { getHabitById } from '../services/habitService';
 
 function AccountPage() {
     // Enable navigation
@@ -15,72 +18,82 @@ function AccountPage() {
     // Loading Controller
     const [loading, setLoading] = useState(true);
     // User Data
-    const { logout, currentUser, getUserProfile } = useAuth();
+    const { logout, currentUser } = useAuth();
     const [username, setUsername] = useState("USERNAME");
-    const [donutData1, setDonutData1] = useState(null);
-    const [donutData2, setDonutData2] = useState(null);
+    const [donutData, setDonutData] = useState([]);
 
+    // --Collect user info
     useEffect(() => {
-        // Simulate an API call to fetch data
-        const fetchData1 = async () => {
-            const dataFromAPI = {
-                labels: ['Completed', 'Remaining'],
-                datasets: [
-                    {
-                        label: 'Habit Completion',
-                        data: [60, 40],
-                        backgroundColor: [
-                            'rgba(209, 90, 78, 1)',
-                            'rgba(242, 160, 123, 1)'
-                        ],
-                        borderColor: [
-                            'rgba(209, 90, 78, 1)',
-                            'rgba(242, 160, 123, 1)'
-                        ],
-                        borderWidth: 1,
-                    },
-                ],
-            };
-            setDonutData1(dataFromAPI);
-        };
+        if (currentUser) {
+            fetchUserInsights(currentUser.uid);
+            fetchUsername();
 
-        const fetchData2 = async () => {
-            const dataFromAPI = {
-                labels: ['Completed', 'Remaining'],
-                datasets: [
-                    {
-                        label: 'Habit Completion',
-                        data: [80, 20],
-                        backgroundColor: [
-                            'rgba(209, 90, 78, 1)',
-                            'rgba(242, 160, 123, 1)',
-                        ],
-                        borderColor: [
-                            'rgba(209, 90, 78, 1)',
-                            'rgba(242, 160, 123, 1)',
-                        ],
-                        borderWidth: 1,
-                    },
-                ],
-            };
-            setDonutData2(dataFromAPI);
-        };
+            setLoading(false);
+        }
+    }, [currentUser]);
 
-        const fetchUsername = async () => {
-            if (currentUser) {
-                getUserProfile(currentUser.uid).then((data) => {
-                    setUsername(data.username);
-                }).catch(error => {
-                    console.error('Error fetching profile info:', error);
+    // fetch the user's insights
+    const fetchUserInsights = async (uid) => {
+        try {
+            // --Get all user insights
+            const userInsights = await getUserInsights(uid);
+
+            // --Filter out completed insights
+            const activeInsights = userInsights.filter(insight => !insight.completed);
+
+            // --Initialize an array to store the chart data for each insight
+            const donutDataArray = [];
+
+            // --Fetch habit details for each active insight
+            for (const insight of activeInsights) {
+                const habitId = insight.userHabitID;
+
+                // ----Fetch the habit using its ID
+                const habit = await getHabitById(uid, habitId);
+
+                // Convert camelCase to readable title format
+                const formattedHabitName = convertCamelCaseToTitle(habit.habitName);
+
+                // ----Prepare donut data for this habit based on the progress
+                const chartData = {
+                    labels: ['Completed', 'Remaining'],
+                    datasets: [{
+                        data: [insight.current, insight.suggestedGoal - insight.current],
+                        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1,
+                    }]
+                };
+
+                // ----Save the formatted habit name and chart data
+                donutDataArray.push({
+                    habitName: formattedHabitName, // ------Use formatted habit name
+                    chartData,
                 });
             }
-        };
 
-        fetchData1();
-        fetchData2();
-        fetchUsername();
-        setLoading(false);
-    }, []);
+            // Save the donut data to useState
+            setDonutData(donutDataArray);
+        } catch (error) {
+            console.error('Error fetching habits or insights:', error);
+        }
+    };
+
+    const fetchUsername = async () => {
+        if (currentUser) {
+            getUserProfile(currentUser.uid).then((data) => {
+                setUsername(data.username);
+            }).catch(error => {
+                console.error('Error fetching profile info:', error);
+            });
+        }
+    };
+
+    // Converts the camelCase titles to title case
+    const convertCamelCaseToTitle = (camelCaseStr) => {
+        const words = camelCaseStr.match(/[A-Z][a-z]+|[a-z]+/g);
+        return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    };
 
     // Confirm is the user wants to log out, and if they do log out and navigate to the login page
     const handleLogout = async () => {
@@ -121,42 +134,26 @@ function AccountPage() {
                     <h2 className={styles.blackFont}>Progress</h2>
                 </div>
 
-                {/* Will be automatically populated by a for loop */}
-                <div className={styles.progressRow}>
-                    <div className={styles.card}>
-                        <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <h2>Habit Name</h2>
-                    </div>
-
-                    <div>
-                        <img src={Arrow} className={styles.arrowImg} alt='ArrowImage' />
-                    </div>
-
-                    <div className={styles.progressCard}>
-                        <div className={styles.donutChart}>
-                            {donutData1 ? <DonutChart chartData={donutData1} /> : <p>Loading chart data...</p>}
+                {/* Dynamically render progress rows for each habit and its corresponding donut chart */}
+                {donutData.map((data, index) => (
+                    <div className={styles.progressRow} key={index}>
+                        <div className={styles.card}>
+                            <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                            <h2>{data.habitName}</h2> {/* Formatted habit name */}
                         </div>
-                        <h2 className={styles.mobileHeading}>Habit Name</h2>
-                    </div>
-                </div>
 
-                <div className={styles.progressRow}>
-                    <div className={styles.card}>
-                        <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <h2>Habit Name</h2>
-                    </div>
-
-                    <div>
-                        <img src={Arrow} className={styles.arrowImg} alt='ArrowImage' />
-                    </div>
-
-                    <div className={styles.progressCard}>
-                        <div className={styles.donutChart}>
-                            {donutData1 ? <DonutChart chartData={donutData2} /> : <p>Loading chart data...</p>}
+                        <div>
+                            <img src={Arrow} className={styles.arrowImg} alt='ArrowImage' />
                         </div>
-                        <h2 className={styles.mobileHeading}>Habit Name</h2>
+
+                        <div className={styles.progressCard}>
+                            <div className={styles.donutChart}>
+                                <DonutChart chartData={data.chartData} />
+                            </div>
+                            <h2 className={styles.mobileHeading}>{data.habitName}</h2> {/* Formatted habit name */}
+                        </div>
                     </div>
-                </div>
+                ))}
 
                 <button style={{ alignSelf: 'center' }} className="btnSecondaryDesktop" onClick={handleLogout}>Log Out</button>
 

@@ -1,5 +1,5 @@
 import { db } from '../firebaseConfig';
-import { collection, addDoc, getDocs, query, where, updateDoc, arrayUnion, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, updateDoc, arrayUnion, doc, getDoc } from 'firebase/firestore';
 
 // Collection reference
 const usersCollection = 'users';
@@ -50,6 +50,25 @@ export const getUserHabits = async (userId) => {
     } catch (error) {
         console.error('Error fetching habits:', error);
         throw new Error('Failed to fetch habits');
+    }
+};
+
+// Get a specific habit by its ID
+export const getHabitById = async (userId, habitId) => {
+    try {
+        const habitRef = doc(db, 'users', userId, 'habits', habitId);
+        const habitSnapshot = await getDoc(habitRef);
+
+        // --Check if the habit exists
+        if (habitSnapshot.exists()) {
+            return { id: habitSnapshot.id, ...habitSnapshot.data() };
+        } else {
+            console.error('No habit found with the given ID');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching habit by ID:', error);
+        throw error;
     }
 };
 

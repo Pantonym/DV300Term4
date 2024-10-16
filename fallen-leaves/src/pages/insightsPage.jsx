@@ -14,19 +14,14 @@ function InsightsPage() {
     const [loading, setLoading] = useState(true);
     // User Data - not all variables are used, but may still be used later
     const { currentUser } = useAuth();
-    const [userID, setUserID] = useState();
     const [habits, setHabits] = useState([]);
     const [insights, setInsights] = useState([]);
-    const [entries, setEntries] = useState([]);
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState('');
-    const [unit, setUnit] = useState('');
-    const [goalProgress, setGoalProgress] = useState(null);
 
     // --Collect user info
     useEffect(() => {
         if (currentUser) {
-            setUserID(currentUser.uid);
             fetchUserHabits(currentUser.uid);
             fetchUserInsights(currentUser.uid);
         }
@@ -59,19 +54,12 @@ function InsightsPage() {
                 const firstHabit = userHabits[0];
                 setSelectedHabitToDisplay(firstHabit);
 
-                // --Set the habit's entries & the proper unit of measurement
-                setEntries(firstHabit.entries);
-                setUnit(habitUnits[firstHabit.habitName]);
-
                 // --Find an active insight for the selected habit
                 const activeInsight = findActiveInsightForHabit(selectedHabitToDisplay.id, insights);
                 setSelectedInsightToDisplay(activeInsight); // Store the active insight
 
                 // --Generate pie chart data based on the habit entries and goals
                 generatePieCharts(firstHabit);
-
-                // // Format the data for the api
-                // setFormattedData(formatForApi(firstHabit));
             }
 
             setLoading(false);
@@ -126,13 +114,15 @@ function InsightsPage() {
             };
             setPieData1(pieChartData1);
 
-            // --Create the second pie chart for the overall entries contribution
-            // TODO: Only show a limited amount if the entries get too many
+            // --Filter the entries based on the insight's dateAdded
+            const filteredEntries = habit.entries.filter(entry => entry.date.toDate() > selectedInsightToDisplay.dateAdded.toDate());
+
+            // --Create the second pie chart for the overall entries contribution after the dateAdded
             const pieChartData2 = {
-                labels: habit.entries.map((entry, index) => `Entry ${index + 1}`),
+                labels: filteredEntries.map((entry, index) => `Entry ${index + 1}`),
                 datasets: [{
-                    data: habit.entries.map(entry => parseFloat(entry.value)),
-                    backgroundColor: habit.entries.map((_, index) =>
+                    data: filteredEntries.map(entry => parseFloat(entry.value)),
+                    backgroundColor: filteredEntries.map((_, index) =>
                         `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`
                     ),
                     borderWidth: 1,
@@ -140,7 +130,6 @@ function InsightsPage() {
             };
             setPieData2(pieChartData2);
 
-            setGoalProgress({ currentGoal, suggestedGoal });
             setLoading(false);
         }
     };
@@ -159,17 +148,6 @@ function InsightsPage() {
         const habitId = e.target.value;
         const selected = habits.find(habit => habit.id === habitId);
         setSelectedHabitToDisplay(selected);
-
-        // // Format the data for the api
-        // setFormattedData(formatForApi(selected));
-
-        // Update entries based on the selected habit
-        setEntries(selected ? selected.entries : []);
-
-        // Set the unit based on the selected habit
-        if (selected) {
-            setUnit(habitUnits[selected.habitName]); // Use habitName to get the corresponding unit
-        }
 
         // Find an active insight for the selected habit
         const activeInsight = findActiveInsightForHabit(habitId, insights);
