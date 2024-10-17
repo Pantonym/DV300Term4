@@ -256,18 +256,13 @@ function HabitsPage() {
                 console.log('Extracted Title: ', extractedTitle);
             }
 
-            // Remove the goal and title lines from the response text
-            const cleanedApiResponse = apiResponse
-                .replace(/\[GOAL:\s*(.*?)\]/, '')    // Remove goal line
-                .replace(/\[TITLE:\s*(.*?)\]/, '');  // Remove title line
-
             // If both title and goal were extracted, save the new insight to Firestore
             if (extractedGoal && extractedTitle) {
                 await addInsight(
                     userID,
                     selectedHabitToDisplay.id,  // Habit ID
                     extractedTitle,  // Insight Title
-                    cleanedApiResponse,  // Full response from OpenAI
+                    apiResponse,  // Full response from OpenAI
                     extractedGoal,   // Goal from OpenAI
                     0                // Initial progress
                 );
@@ -323,12 +318,14 @@ function HabitsPage() {
         return (
             <div className="loadingContainer">
                 <Oval color="#D75B30" height={80} width={80} />
+                <p style={{ fontSize: '18px', marginLeft: '10px' }} className='lora_font'>Loading... <br></br> Please do not close or refresh this browser.</p>
             </div>
         );
     }
 
     return (
         <div>
+            <div className={styles.bodyBG}></div>
             {/* FORM TO ADD A HABIT */}
             {habitFormShow && (
                 <div className={styles.habitsForm}>

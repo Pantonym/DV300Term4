@@ -18,14 +18,6 @@ body, p, label {
     font-weight: 400;
 }
 
-body {
-    background-image: url('./assets/bgLeaf.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 80%;
-    background-position-y: 30%;
-}
-
 h1, h2, h3, h4, h5, h6 {
     font-family: "Lora", serif;
     font-weight: 200;

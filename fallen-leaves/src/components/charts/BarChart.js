@@ -11,10 +11,39 @@ function BarChart({ chartData }) {
         plugins: {
             legend: {
                 position: 'top',
+                labels: {
+                    color: '#000000', // Change legend text color (to white in this case)
+                    font: {
+                        size: 14, // Adjust the font size if needed
+                    },
+                },
             },
             title: {
                 display: false,
                 text: 'Monthly Habit Completion',
+            },
+            tooltip: {
+                titleColor: '#ffffff', // Tooltip title color
+                bodyColor: '#ffffff', // Tooltip body color
+                backgroundColor: '#333', // Tooltip background color
+            },
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#000000', // Change X-axis label color
+                },
+                grid: {
+                    color: '#C5C5C5', // Change X-axis gridline color (optional)
+                },
+            },
+            y: {
+                ticks: {
+                    color: '#000000', // Change Y-axis label color
+                },
+                grid: {
+                    color: '#C5C5C5', // Change Y-axis gridline color (optional)
+                },
             },
         },
     };

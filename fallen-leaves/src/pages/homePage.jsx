@@ -221,114 +221,121 @@ function HomePage() {
 
     return (
         <div>
-            {/* FORM TO ADD A HABIT */}
-            {habitFormShow && (
-                <div className={styles.habitsForm}>
-                    <h1 className={styles.fontWhite}>Add Habit</h1>
+            <div className={styles.bodyBG}></div>
+            <div>
+                {/* FORM TO ADD A HABIT */}
+                {habitFormShow && (
+                    <div className={styles.habitsForm}>
+                        <h1 className={styles.fontWhite}>Add Habit</h1>
 
-                    {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleHabitChange}>
-                        <option value="">Select a Habit</option>
-                        <option value="recycling">Recycling</option>
-                        <option value="composting">Composting</option>
-                        <option value="energyUsage">Energy Usage</option>
-                        <option value="waterConservation">Water Conservation</option>
-                        <option value="reusableBags">Reusable Bags</option>
-                    </select>
+                        {/* TODO: Future implementation, populate only with habits the user doesn't have */}
+                        <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleHabitChange}>
+                            <option value="">Select a Habit</option>
+                            <option value="recycling">Recycling</option>
+                            <option value="composting">Composting</option>
+                            <option value="energyUsage">Energy Usage</option>
+                            <option value="waterConservation">Water Conservation</option>
+                            <option value="reusableBags">Reusable Bags</option>
+                        </select>
 
-                    {/* Description of the selected habit */}
-                    {selectedHabit ? (
-                        <p className={styles.habitDescription}>
-                            {habitDescriptions[selectedHabit]}
-                        </p>
-                    ) : (
-                        // Spacer that stops rendering when the text is visible
-                        <div style={{ height: '25px', width: '1px' }}></div>
-                    )}
+                        {/* Description of the selected habit */}
+                        {selectedHabit ? (
+                            <p className={styles.habitDescription}>
+                                {habitDescriptions[selectedHabit]}
+                            </p>
+                        ) : (
+                            // Spacer that stops rendering when the text is visible
+                            <div style={{ height: '25px', width: '1px' }}></div>
+                        )}
 
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleGoalChange}>
-                        <option value="">Select a Goal</option>
-                        <option value="maintain">Maintain current value</option>
-                        <option value="reduce">Reduce current value</option>
-                    </select>
+                        <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleGoalChange}>
+                            <option value="">Select a Goal</option>
+                            <option value="maintain">Maintain current value</option>
+                            <option value="reduce">Reduce current value</option>
+                        </select>
 
-                    <button className='btnSecondaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            {/* FORM TO ADD AN ENTRY */}
-            {entryFormShow && (
-                <div className={styles.habitsForm}>
-                    <h1 className={styles.fontWhite}>Add Entry (in {unit})</h1>
-
-                    {/* Dropdown to select habit */}
-                    <select
-                        value={selectedHabitToAddEntry ? selectedHabitToAddEntry.id : ''}
-                        onChange={handleHabitSelect}
-                        className={`${styles.habitSelect} inter_font`}
-                    >
-                        {habits.map(habit => (
-                            <option key={habit.id} value={habit.id}>
-                                {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Input field for the entry value */}
-                    <input
-                        type='number'
-                        value={entryValue}
-                        placeholder={0}
-                        min={0}
-                        onChange={handleEntryValueChange}
-                        className={styles.sedEntry}
-                    />
-
-                    <button className='btnSecondaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            <div style={{
-                // --Set opacity to 50% when the forms are shown
-                opacity: habitFormShow || entryFormShow ? '50%' : '100%',
-                // --Disable interactions when forms are shown
-                pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
-            }}>
-                <h1 className='inter_font'>Welcome, {username}</h1>
-
-                <div className={styles.cardHolder}>
-                    <div className={styles.card} style={{ backgroundColor: '#C291D6' }} onClick={() => setHabitFormShow(true)}>
-                        <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`} >
-                            Add Habit
+                        <button className='btnSecondaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
+                        <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
+                            Cancel
                         </button>
                     </div>
+                )}
 
-                    <div className={styles.card} style={{ backgroundColor: '#8BC594' }} onClick={() => setEntryFormShow(true)}>
-                        <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`}>
-                            Add Entry
+                {/* FORM TO ADD AN ENTRY */}
+                {entryFormShow && (
+                    <div className={styles.habitsForm}>
+                        <h1 className={styles.fontWhite}>Add Entry (in {unit})</h1>
+
+                        {/* Dropdown to select habit */}
+                        <select
+                            value={selectedHabitToAddEntry ? selectedHabitToAddEntry.id : ''}
+                            onChange={handleHabitSelect}
+                            className={`${styles.habitSelect} inter_font`}
+                        >
+                            {habits.map(habit => (
+                                <option key={habit.id} value={habit.id}>
+                                    {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Input field for the entry value */}
+                        <input
+                            type='number'
+                            value={entryValue}
+                            placeholder={0}
+                            min={0}
+                            onChange={handleEntryValueChange}
+                            className={styles.sedEntry}
+                        />
+
+                        <button className='btnSecondaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
+                        <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
+                            Cancel
                         </button>
                     </div>
+                )}
 
-                    <div className={styles.card} style={{ backgroundColor: '#7A9CC3' }} onClick={handleNavigateInsightsPage}>
-                        <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                        <button className={`${styles.headingButton} lora_font`}>
-                            View Insights
-                        </button>
+                <div style={{
+                    // --Set opacity to 50% when the forms are shown
+                    opacity: habitFormShow || entryFormShow ? '50%' : '100%',
+                    // --Disable interactions when forms are shown
+                    pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
+                }}>
+                    <h1 className='inter_font'>Welcome, {username}</h1>
+
+                    <div className={styles.cardHolder}>
+                        <div className={styles.card} style={{ backgroundColor: '#C291D6' }} onClick={() => setHabitFormShow(true)}>
+                            <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                            <button className={`${styles.headingButton} lora_font`} >
+                                Add Habit
+                            </button>
+                        </div>
+
+                        <div className={styles.card} style={{ backgroundColor: '#8BC594' }} onClick={() => setEntryFormShow(true)}>
+                            <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                            <button className={`${styles.headingButton} lora_font`}>
+                                Add Entry
+                            </button>
+                        </div>
+
+                        <div className={styles.card} style={{ backgroundColor: '#7A9CC3' }} onClick={handleNavigateInsightsPage}>
+                            <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                            <button className={`${styles.headingButton} lora_font`}>
+                                View Insights
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className='hideOnMobile'>
+                        <h1 className='inter_font'>Here are some insights on your habits:</h1>
+                        <div className={styles.barChartCard}>
+                            {barData ? <BarChart chartData={barData} /> : <p>Loading chart data...</p>}
+                        </div>
                     </div>
                 </div>
 
-                <div className='hideOnMobile'>
-                    <h1 className='inter_font'>Here are some insights on your habits:</h1>
-                    {barData ? <BarChart chartData={barData} /> : <p>Loading chart data...</p>}
-                </div>
+                {/* <a href="http://www.freepik.com" className={styles.backgroundLink}>Background Designed by pikisuperstar / Freepik</a> */}
             </div>
         </div>
     )

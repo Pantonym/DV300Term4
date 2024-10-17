@@ -19,19 +19,27 @@ const API_URL = 'https://api.openai.com/v1/chat/completions';
 // Call the AI to create insights
 export const callOpenAiAPI = async (habitData) => {
     try {
-        const prompt = `Analyze the following habit data and provide insights. Ensure that the goal provided is a specific number and calculated based on the total sum of all the values in the entries. The goal should either be equal to, slightly lower, or slightly higher than the total sum of the entries. At the end, provide the goal in the format [GOAL: number] without units or text. The goal should be realistic based on the analysis of the data. In addition, provide a suitable title in the following format [TITLE: string]. Data: ${habitData}`;
+        const prompt = `Analyze the following habit data and provide insights.
+        - Identify patterns, trends, and fluctuations in the habit data.
+        - Provide 2-3 personalized recommendations based on the data.
+        - Identify which days or periods the user is most or least active and suggest adjustments.
+        - Provide an attainable goal and ensure it is a **specific number** and calculated based on the total sum of all the values in the entries. The goal should either be equal to, slightly lower, or slightly higher than the total sum of the entries.
+        - **IMPORTANT**: At the end, provide the goal in the exact format [GOAL: number] without units or additional text. 
+        - The goal should be realistic based on the analysis of the data. 
+        - **IMPORTANT**: In addition, provide a suitable title in the exact format [TITLE: string].
+        Data: ${habitData}`;
 
         if (!apiKey) {
             throw new Error("API key is missing. Please check your environment variables.");
         }
 
         const response = await axios.post(API_URL, {
-            model: 'gpt-3.5-turbo', // Use the gpt-4o-mini model
+            model: 'gpt-3.5-turbo', // Use the gpt-3.5-turbo model
             messages: [
                 { role: 'system', content: 'You are an assistant.' },
                 { role: 'user', content: prompt }
             ],
-            max_tokens: 150, // The maximum amount of tokens usable for this request
+            max_tokens: 300, // The maximum amount of tokens usable for this request
             temperature: 0.3, // Controls creativity/randomness
         }, {
             headers: {

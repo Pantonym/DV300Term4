@@ -1,6 +1,23 @@
+.bodyBG {
+    background-image: url('../../assets/backgroundDashboard.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    z-index: -1;
+}
+
 h1 {
-    color: #9B331B;
+    color: white;
     font-weight: 400 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 h2 {
@@ -45,7 +62,7 @@ h2 {
 .habitsForm {
     position: absolute;
     z-index: 7;
-    left: 575px;
+    left: 40%;
     top: 200px;
 
     display: flex;
@@ -146,6 +163,14 @@ h2 {
 
 .habitSelect option {
     color: black;
+}
+
+.barChartCard {
+    background-color: #F6DFB1;
+    padding: 5px;
+    
+    border-radius: 15px;
+    border: 4px solid #D75B30;
 }
 
 /* MOBILE RESPONSIVENESS */

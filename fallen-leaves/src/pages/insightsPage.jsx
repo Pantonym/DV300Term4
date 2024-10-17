@@ -107,9 +107,8 @@ function InsightsPage() {
                 labels: ['Completed', 'Remaining'],
                 datasets: [{
                     data: [completionPercentage, remainingPercentage],
-                    backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-                    borderWidth: 1,
+                    backgroundColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 0,
                 }]
             };
             setPieData1(pieChartData1);
@@ -123,24 +122,15 @@ function InsightsPage() {
                 datasets: [{
                     data: filteredEntries.map(entry => parseFloat(entry.value)),
                     backgroundColor: filteredEntries.map((_, index) =>
-                        `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`
+                        `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
                     ),
-                    borderWidth: 1,
+                    borderWidth: 0,
                 }]
             };
             setPieData2(pieChartData2);
 
             setLoading(false);
         }
-    };
-
-    // Habit Units
-    const habitUnits = {
-        recycling: 'kg',
-        composting: 'kg',
-        energyUsage: 'kWh',
-        waterConservation: 'liters',
-        reusableBags: 'count'
     };
 
     // --Handle habit change for the displaying of chart data
@@ -164,31 +154,38 @@ function InsightsPage() {
     }
 
     return (
-        <div className={styles.container}>
-            {/* Choose which habit to display */}
-            <select id="habitDropdown" className={`${styles.habitSelect} inter_font`} onChange={handleHabitDisplayChange}>
-                {habits.map(habit => (
-                    <option key={habit.id} value={habit.id}>
-                        {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
-                    </option>
-                ))}
-            </select>
+        <div>
+            <div className={styles.bodyBG}></div>
+            <div className={styles.container}>
+                {/* Choose which habit to display */}
+                <select id="habitDropdown" className={`inter_font`} onChange={handleHabitDisplayChange}>
+                    {habits.map(habit => (
+                        <option key={habit.id} value={habit.id}>
+                            {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
+                        </option>
+                    ))}
+                </select>
 
-            <div className={styles.pies}>
-                <div className={styles.pieChart}>
-                    {pieData1 ? <PieChart chartData={pieData1} /> : <p>Loading chart data...</p>}
+                <div className={styles.pies}>
+                    <div className={styles.pieChart}>
+                        {pieData1 ? <PieChart chartData={pieData1} /> : <p>Loading chart data...</p>}
+                    </div>
+                    <span style={{ width: '50px', height: '50px' }}></span>
+                    <div className={styles.pieChart}>
+                        {pieData2 ? <PieChart chartData={pieData2} /> : <p>Loading chart data...</p>}
+                    </div>
                 </div>
-                <span style={{ width: '50px', height: '50px' }}></span>
-                <div className={styles.pieChart}>
-                    {pieData2 ? <PieChart chartData={pieData2} /> : <p>Loading chart data...</p>}
-                </div>
+
+                <p className={styles.feedbackHolder}
+                    dangerouslySetInnerHTML={{
+                        __html: selectedInsightToDisplay && selectedInsightToDisplay.insightText
+                            ? selectedInsightToDisplay.insightText
+                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Make bold text
+                                .replace(/\n/g, '<br>') // Insert line breaks
+                            : 'No insights available for this habit.'
+                    }}>
+                </p>
             </div>
-
-            <p className={styles.feedbackHolder}>
-                {selectedInsightToDisplay && selectedInsightToDisplay.insightText
-                    ? selectedInsightToDisplay.insightText
-                    : 'No insights available for this habit.'}
-            </p>
         </div>
     )
 }

@@ -11,9 +11,15 @@ function PieChart({ chartData }) {
         plugins: {
             legend: {
                 position: 'top',
+                labels: {
+                    color: '#000000', // Change legend text color (to white in this case)
+                    font: {
+                        size: 14, // Adjust the font size if needed
+                    },
+                },
             },
             title: {
-                display: true,
+                display: false,
                 text: 'Habit Completion Distribution',
             },
         },

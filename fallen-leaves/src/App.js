@@ -24,7 +24,6 @@ const AppWrapper = () => {
     <>
       {shouldShowNavbar && <NavbarComponent />}
 
-      {/* TODO: Which navigation item is active doesn't update when pages refresh */}
       <div className='appWrapper'>
         <Routes>
           {/* Protected route for login */}

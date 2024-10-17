@@ -138,7 +138,7 @@ function AccountPage() {
                 {donutData.map((data, index) => (
                     <div className={styles.progressRow} key={index}>
                         <div className={styles.card}>
-                            <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                            <ion-icon name="clipboard-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
                             <h2>{data.habitName}</h2> {/* Formatted habit name */}
                         </div>
 
