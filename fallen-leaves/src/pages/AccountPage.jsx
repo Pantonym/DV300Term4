@@ -24,11 +24,10 @@ function AccountPage() {
 
     // --Collect user info
     useEffect(() => {
+        setLoading(true);
         if (currentUser) {
             fetchUserInsights(currentUser.uid);
             fetchUsername();
-
-            setLoading(false);
         }
     }, [currentUser]);
 
@@ -59,8 +58,8 @@ function AccountPage() {
                     labels: ['Completed', 'Remaining'],
                     datasets: [{
                         data: [insight.current, insight.suggestedGoal - insight.current],
-                        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        backgroundColor: ['rgba(225, 173, 1, 0.6)', 'rgba(125, 5, 65, 0.6)'],
+                        borderColor: ['rgba(225, 173, 1, 1)', 'rgba(125, 5, 65, 1)'],
                         borderWidth: 1,
                     }]
                 };
@@ -74,6 +73,8 @@ function AccountPage() {
 
             // Save the donut data to useState
             setDonutData(donutDataArray);
+
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching habits or insights:', error);
         }
@@ -122,41 +123,44 @@ function AccountPage() {
     }
 
     return (
-        <div className={styles.container}>
-            <div>
-                <div className={styles.profileImage}></div>
-                <h1 className={styles.blackFont}>{username}</h1>
-            </div>
-
-            <div className={styles.progressContainer}>
-                <div className={styles.progressRow}>
-                    <h2 className={`${styles.blackFont} hideOnMobile`}>Habits</h2>
-                    <h2 className={styles.blackFont}>Progress</h2>
+        <div>
+            <div className={styles.bodyBG}></div>
+            <div className={styles.container}>
+                <div>
+                    <div className={styles.profileImage}></div>
+                    <h1 className={styles.blackFont}>{username}</h1>
                 </div>
 
-                {/* Dynamically render progress rows for each habit and its corresponding donut chart */}
-                {donutData.map((data, index) => (
-                    <div className={styles.progressRow} key={index}>
-                        <div className={styles.card}>
-                            <ion-icon name="clipboard-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
-                            <h2>{data.habitName}</h2> {/* Formatted habit name */}
-                        </div>
-
-                        <div>
-                            <img src={Arrow} className={styles.arrowImg} alt='ArrowImage' />
-                        </div>
-
-                        <div className={styles.progressCard}>
-                            <div className={styles.donutChart}>
-                                <DonutChart chartData={data.chartData} />
-                            </div>
-                            <h2 className={styles.mobileHeading}>{data.habitName}</h2> {/* Formatted habit name */}
-                        </div>
+                <div className={styles.progressContainer}>
+                    <div className={styles.progressRow}>
+                        <h2 className={`${styles.blackFont} hideOnMobile`}>Habits</h2>
+                        <h2 className={styles.blackFont}>Progress</h2>
                     </div>
-                ))}
 
-                <button style={{ alignSelf: 'center' }} className="btnSecondaryDesktop" onClick={handleLogout}>Log Out</button>
+                    {/* Dynamically render progress rows for each habit and its corresponding donut chart */}
+                    {donutData.map((data, index) => (
+                        <div className={styles.progressRow} key={index}>
+                            <div className={styles.card}>
+                                <ion-icon name="clipboard-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
+                                <h2>{data.habitName}</h2> {/* Formatted habit name */}
+                            </div>
 
+                            <div>
+                                <img src={Arrow} className={styles.arrowImg} alt='ArrowImage' />
+                            </div>
+
+                            <div className={styles.progressCard}>
+                                <div className={styles.donutChart}>
+                                    <DonutChart chartData={data.chartData} />
+                                </div>
+                                <h2 className={styles.mobileHeading}>{data.habitName}</h2> {/* Formatted habit name */}
+                            </div>
+                        </div>
+                    ))}
+
+                    <button style={{ alignSelf: 'center' }} className="btnPrimaryDesktop" onClick={handleLogout}>Log Out</button>
+
+                </div>
             </div>
         </div>
     )

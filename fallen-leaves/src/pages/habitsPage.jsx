@@ -332,7 +332,7 @@ function HabitsPage() {
                     <h1 className={styles.fontWhite}>Add Habit</h1>
 
                     {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleHabitChange}>
+                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleHabitChange}>
                         <option value="">Select a Habit</option>
                         <option value="recycling">Recycling</option>
                         <option value="composting">Composting</option>
@@ -397,7 +397,7 @@ function HabitsPage() {
                 }}
             >
                 {/* Choose which habit to display */}
-                <select id="habitDropdown" className={`${styles.habitSelect} inter_font`} onChange={handleHabitDisplayChange}>
+                <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
                     {habits.map(habit => (
                         <option key={habit.id} value={habit.id}>
                             {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}

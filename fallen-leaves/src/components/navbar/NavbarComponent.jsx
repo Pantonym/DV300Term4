@@ -54,6 +54,7 @@ function NavbarComponent() {
                         </div>
                     </Link>
 
+                    {/* TODO: Change icons to #7d0541 when active */}
                     <Link to="/" className={styles.navLink}>
                         <div>
                             <ion-icon name="leaf-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>

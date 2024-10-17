@@ -107,7 +107,8 @@ function InsightsPage() {
                 labels: ['Completed', 'Remaining'],
                 datasets: [{
                     data: [completionPercentage, remainingPercentage],
-                    backgroundColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    backgroundColor: ['rgba(225, 173, 1, 0.6)', 'rgba(125, 5, 65, 0.6)'],
+                    borderColor: ['rgba(225, 173, 1, 1)', 'rgba(125, 5, 65, 1)'],
                     borderWidth: 0,
                 }]
             };
@@ -158,7 +159,7 @@ function InsightsPage() {
             <div className={styles.bodyBG}></div>
             <div className={styles.container}>
                 {/* Choose which habit to display */}
-                <select id="habitDropdown" className={`inter_font`} onChange={handleHabitDisplayChange}>
+                <select id="habitDropdown" className={`lora_font`} onChange={handleHabitDisplayChange}>
                     {habits.map(habit => (
                         <option key={habit.id} value={habit.id}>
                             {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}

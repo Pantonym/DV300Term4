@@ -229,7 +229,7 @@ function HomePage() {
                         <h1 className={styles.fontWhite}>Add Habit</h1>
 
                         {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                        <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleHabitChange}>
+                        <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleHabitChange}>
                             <option value="">Select a Habit</option>
                             <option value="recycling">Recycling</option>
                             <option value="composting">Composting</option>
@@ -270,7 +270,7 @@ function HomePage() {
                         <select
                             value={selectedHabitToAddEntry ? selectedHabitToAddEntry.id : ''}
                             onChange={handleHabitSelect}
-                            className={`${styles.habitSelect} inter_font`}
+                            className={`${styles.habitSelect} lora_font`}
                         >
                             {habits.map(habit => (
                                 <option key={habit.id} value={habit.id}>
@@ -305,21 +305,21 @@ function HomePage() {
                     <h1 className='inter_font'>Welcome, {username}</h1>
 
                     <div className={styles.cardHolder}>
-                        <div className={styles.card} style={{ backgroundColor: '#C291D6' }} onClick={() => setHabitFormShow(true)}>
+                        <div className={styles.card} style={{ backgroundColor: '#7d0541' }} onClick={() => setHabitFormShow(true)}>
                             <ion-icon name="clipboard-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                             <button className={`${styles.headingButton} lora_font`} >
                                 Add Habit
                             </button>
                         </div>
 
-                        <div className={styles.card} style={{ backgroundColor: '#8BC594' }} onClick={() => setEntryFormShow(true)}>
+                        <div className={styles.card} style={{ backgroundColor: '#7d0541' }} onClick={() => setEntryFormShow(true)}>
                             <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                             <button className={`${styles.headingButton} lora_font`}>
                                 Add Entry
                             </button>
                         </div>
 
-                        <div className={styles.card} style={{ backgroundColor: '#7A9CC3' }} onClick={handleNavigateInsightsPage}>
+                        <div className={styles.card} style={{ backgroundColor: '#7d0541' }} onClick={handleNavigateInsightsPage}>
                             <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                             <button className={`${styles.headingButton} lora_font`}>
                                 View Insights
