@@ -17,6 +17,8 @@ function NavbarComponent() {
                 return 0;
             case '/habits':
                 return 1;
+            case '/allEntries':
+                return 1;
             case '/insights':
                 return 2;
             case '/account':

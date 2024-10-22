@@ -1,5 +1,6 @@
 import { db } from '../firebaseConfig';
 import { collection, addDoc, getDocs, query, where, updateDoc, arrayUnion, doc, getDoc } from 'firebase/firestore';
+import { addInsight } from './insightsService';
 
 // Collection reference
 const usersCollection = 'users';
@@ -23,12 +24,24 @@ export const addNewHabit = async (userId, habitName, habitGoal) => {
     try {
         const userHabitsRef = collection(db, usersCollection, userId, 'habits');
 
-        // Add the new habit
-        await addDoc(userHabitsRef, {
+        // --Add the new habit
+        const docRef = await addDoc(userHabitsRef, {
             habitName: habitName,
             habitGoal: habitGoal,
             entries: []
         });
+
+        // --Use the doc's reference to get its generated ID
+        const userHabitID = docRef.id;
+
+        // --Default insight data
+        const insightTitle = "Your first insight";
+        const insightText = "Your first insight will be generated once you complete your first goal.";
+        const suggestedGoal = 50;
+        const currentProgress = 0;
+
+        // --Add the default insight for the new habit
+        await addInsight(userId, userHabitID, insightTitle, insightText, suggestedGoal, currentProgress);
 
         return true;
     } catch (error) {
@@ -103,4 +116,39 @@ export const formatForApi = (habitData) => {
     Entries:
     ${formattedEntries}
     `;
+};
+
+// Updates the goal of a specific habit
+export const updateHabitGoal = async (userId, habitId, newGoal) => {
+    try {
+        if (!newGoal) {
+            throw new Error('No goal provided');
+        }
+
+        const habitDocRef = doc(db, 'users', userId, 'habits', habitId);
+        await updateDoc(habitDocRef, {
+            habitGoal: newGoal
+        });
+        console.log('Habit goal updated successfully');
+    } catch (error) {
+        console.error('Error updating habit goal:', error);
+        throw new Error('Failed to update habit goal');
+    }
+};
+
+// Updates the entire entries array of a habit in Firestore
+export const updateHabitEntries = async (userId, habitId, updatedEntries) => {
+    try {
+        const habitDocRef = doc(db, 'users', userId, 'habits', habitId);
+
+        // --Update the entire entries array in Firestore
+        await updateDoc(habitDocRef, {
+            entries: updatedEntries
+        });
+
+        console.log('Habit entries updated successfully');
+    } catch (error) {
+        console.error('Error updating habit entries:', error);
+        throw new Error('Failed to update habit entries');
+    }
 };

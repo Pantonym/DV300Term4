@@ -4,6 +4,7 @@ import { Oval } from 'react-loader-spinner';
 import { addEntryToHabit, addNewHabit, checkHabitExists, formatForApi, getUserHabits } from '../services/habitService';
 import { useAuth } from '../contexts/authContext';
 import { addInsight, callOpenAiAPI, getUserInsights, updateInsight } from '../services/insightsService';
+import { useNavigate } from 'react-router-dom';
 
 function HabitsPage() {
     // Form Control
@@ -13,6 +14,8 @@ function HabitsPage() {
     const [selectedGoal, setSelectedGoal] = useState('');
     // Loading Controller
     const [loading, setLoading] = useState(true);
+    // Navigation
+    const navigate = useNavigate();
     // User Info
     const { currentUser } = useAuth();
     const [userID, setUserID] = useState();
@@ -23,9 +26,11 @@ function HabitsPage() {
     const [unit, setUnit] = useState('');
     const [entryValue, setEntryValue] = useState(0);
     const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState(''); // --Gets the active insight from the insights collection
-    const [insight, setInsight] = useState(''); // --For the newly generated insight text form the api
-    const [goal, setGoal] = useState('');
-    const [title, setTitle] = useState('');
+
+    // Navigation function
+    const handleViewAllEntries = () => {
+        navigate('/allEntries', { state: { habit: selectedHabitToDisplay } });
+    };
 
     // --Collect user info
     useEffect(() => {
@@ -121,7 +126,7 @@ function HabitsPage() {
         composting: 'kg',
         energyUsage: 'kWh',
         waterConservation: 'liters',
-        reusableBags: 'count'
+        reusableBags: 'bags'
     };
 
     // SECTION: HABIT FORM
@@ -156,6 +161,9 @@ function HabitsPage() {
             // --Add the habit if it doesn't already exist
             await addNewHabit(userID, selectedHabit, selectedGoal);
             alert('Habit added successfully!');
+
+            navigate(0);
+
             setHabitFormShow(false);
         } catch (error) {
             console.error('Error adding habit:', error);
@@ -170,6 +178,7 @@ function HabitsPage() {
     };
 
     // Add an entry
+    // TODO: It is not adding the entry that completed the goal when generating a new insight
     const handleAddEntrySubmissionClick = async () => {
         console.log('Selected habit to display:', selectedHabitToDisplay);
         console.log('User ID:', userID);
@@ -241,7 +250,6 @@ function HabitsPage() {
             let extractedGoal = null;
             if (goalMatch && goalMatch[1]) {
                 extractedGoal = parseInt(goalMatch[1], 10); // Convert the string to an integer
-                setGoal(extractedGoal);
                 console.log('Extracted Goal: ', extractedGoal);
             }
 
@@ -252,7 +260,6 @@ function HabitsPage() {
             let extractedTitle = null;
             if (titleMatch && titleMatch[1]) {
                 extractedTitle = titleMatch[1];
-                setTitle(extractedTitle);
                 console.log('Extracted Title: ', extractedTitle);
             }
 
@@ -353,6 +360,7 @@ function HabitsPage() {
 
                     <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleGoalChange}>
                         <option value="">Select a Goal</option>
+                        <option value="increase">Increase current value</option>
                         <option value="maintain">Maintain current value</option>
                         <option value="reduce">Reduce current value</option>
                     </select>
@@ -387,7 +395,6 @@ function HabitsPage() {
             )}
 
             {/* DISPLAYING HABIT DROPDOWN AND TABLE */}
-            {/* TODO: Future implementation: edit entries */}
             <div
                 className={styles.container}
                 style={{
@@ -429,6 +436,14 @@ function HabitsPage() {
                                 <td colSpan="2">No entries for this habit.</td>
                             </tr>
                         )}
+
+                        <tr>
+                            <td colSpan="2" className={styles.btnRow}>
+                                <button className={styles.btnAllEntries} onClick={handleViewAllEntries}>
+                                    View All Entries
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 

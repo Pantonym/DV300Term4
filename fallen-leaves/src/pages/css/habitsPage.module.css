@@ -99,6 +99,42 @@
     color: white;
 }
 
+.btnRow {
+    text-align: center;
+    padding: 0px;
+
+    background-color: #9B331B;
+}
+
+.btnRow:hover {
+    background-color: #9B331B;
+}
+
+.btnAllEntries {
+    background-color: white;
+    color: black;
+
+    border: none;
+
+    width: fit-content;
+    height: 50px;
+
+    border-radius: 10px;
+    font-size: 20px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+    font-family: "Lora", serif;
+}
+
+.btnAllEntries:hover {
+    border: 3px solid black;
+}
+
 /* BUTTONS */
 .buttons {
     display: flex;

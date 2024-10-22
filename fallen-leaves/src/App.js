@@ -15,6 +15,7 @@ import AccountPage from './pages/AccountPage';
 // Contexts
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
+import AllEntriesPage from './pages/AllEntriesPage';
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -31,6 +32,9 @@ const AppWrapper = () => {
 
           {/* Habits */}
           <Route path="/habits" element={<PrivateRoute element={<HabitsPage />} />} />
+
+          {/* --All Entries */}
+          <Route path="/allEntries" element={<PrivateRoute element={<AllEntriesPage />} />} />
 
           {/* Insights */}
           <Route path="/insights" element={<PrivateRoute element={<InsightsPage />} />} />

@@ -66,7 +66,7 @@ function HomePage() {
         composting: 'kg',
         energyUsage: 'kWh',
         waterConservation: 'liters',
-        reusableBags: 'count'
+        reusableBags: 'bags'
     };
 
     // --Collect user info

@@ -1,0 +1,144 @@
+.bodyBG {
+    background-image: url('../../assets/backgroundDashboard.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    z-index: -1;
+}
+
+.container {
+    z-index: 1;
+    width: auto;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 20px;
+    color: #9B331B;
+}
+
+.addHabitSelect {
+    width: 100%;
+    height: 60px;
+
+    padding: 10px;
+    padding-left: 15px;
+
+    align-self: center;
+
+    font-size: 22px;
+    color: black;
+
+    border: 3px solid #F6DFB1;
+    border-radius: 15px;
+
+    /* Creating a unique arrow: */
+    /* --Hide default arrow for chrome, safari and firefox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* --Receive the unique icon, change its size and move it to the right */
+    background: white url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath fill="black" d="M0 0h10L5 6z"/%3E%3C/svg%3E') no-repeat right 10px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.addHabitSelect option {
+    background-color: white;
+}
+
+.goalSection {
+    background-color: #D75B30;
+
+    padding: 20px;
+    border-radius: 15px;
+
+    margin-bottom: 30px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.goalSection h2 {
+    color: white;
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+
+.entriesTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+.entriesTable thead tr {
+    background-color: #9B331B;
+    color: white;
+    text-align: left;
+}
+
+.entriesTable th, .entriesTable td {
+    padding: 12px 15px;
+    border: none;
+}
+
+.entriesTable th {
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.entriesTable tbody tr:nth-of-type(even) {
+    background-color: #F6DFB1;
+}
+
+.entriesTable tbody tr {
+    background-color: white;
+}
+
+.entriesTable tbody tr:hover {
+    background-color: #D15A4E;
+    color: white;
+}
+
+.entriesTable input {
+    padding: 5px;
+    font-size: 16px;
+    width: 80px;
+    border: 2px solid #D75B30;
+    border-radius: 5px;
+}
+
+.entriesTable button {
+    padding: 5px 10px;
+    background-color: #D75B30;
+    color: white;
+    border: none;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.entriesTable button:hover {
+    background-color: #9B331B;
+}
+
+@media (max-width: 975px) {
+    .spaceForMobile {
+        margin-bottom: 15px;
+    }
+}
