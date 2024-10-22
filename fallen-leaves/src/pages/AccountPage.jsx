@@ -127,11 +127,14 @@ function AccountPage() {
             <div className={styles.bodyBG}></div>
             <div className={styles.container}>
                 <div>
-                    <div className={styles.profileImage}></div>
-                    <h1 className={styles.blackFont}>{username}</h1>
+                    {/* TODO: Future implementation: upload profile image */}
+                    {/* TODO: Future implementation: edit username */}
+                    {/* <div className={styles.profileImage}></div> */}
+                    {/* <h1>{username}</h1> */}
                 </div>
 
                 <div className={styles.progressContainer}>
+                    <h1 className={styles.blackFont} style={{ textShadow: 'none' }}>{username}</h1>
                     <div className={styles.progressRow}>
                         <h2 className={`${styles.blackFont} hideOnMobile`}>Habits</h2>
                         <h2 className={styles.blackFont}>Progress</h2>

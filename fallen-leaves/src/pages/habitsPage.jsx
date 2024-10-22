@@ -358,7 +358,7 @@ function HabitsPage() {
                     </select>
 
                     <button className='btnPrimaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
-                    <button className='btnSecondaryDesktop' style={{ color: 'white'}} onClick={() => setHabitFormShow(false)}>
+                    <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
                         Cancel
                     </button>
                 </div>
@@ -387,6 +387,7 @@ function HabitsPage() {
             )}
 
             {/* DISPLAYING HABIT DROPDOWN AND TABLE */}
+            {/* TODO: Future implementation: edit entries */}
             <div
                 className={styles.container}
                 style={{

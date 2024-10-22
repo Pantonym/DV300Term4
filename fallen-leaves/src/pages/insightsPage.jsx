@@ -19,14 +19,19 @@ function InsightsPage() {
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState('');
 
-    // --Acceptable colours for the graphs
+    // --Acceptable colours for the graphs' backgrounds
     const graphColours = [
-        'rgba(246, 180, 196, 0.8)', // Muted pink
-        '#b280a7',       // Muted purple
+        'rgba(246, 180, 196, 0.6)', // Muted pink
+        'rgba(178, 128, 167, 0.6)', // Muted purple
         'rgba(223, 200, 100, 0.6)', // Soft gold
-        '#4e0039',       // Deep plum
-        '#e7b87b'        // Warm beige
-    ]
+        'rgba(78, 0, 57, 0.6)',     // Deep plum
+        'rgba(231, 184, 123, 0.6)', // Warm beige
+        'rgba(192, 132, 151, 0.6)', // Soft Rose
+        'rgba(211, 149, 130, 0.6)', // Soft Coral
+        'rgba(111, 76, 91, 0.6)',   // Deep Mulberry
+        'rgba(236, 193, 119, 0.6)', // Warm Honey
+        'rgba(255, 216, 168, 0.6)'  // Soft Peach
+    ];
 
     // --Collect user info
     useEffect(() => {
@@ -117,8 +122,8 @@ function InsightsPage() {
                 datasets: [{
                     data: [completionPercentage, remainingPercentage],
                     backgroundColor: ['rgba(225, 173, 1, 0.6)', 'rgba(125, 5, 65, 0.6)'],
-                    borderColor: ['rgba(225, 173, 1, 1)', 'rgba(125, 5, 65, 1)'],
-                    borderWidth: 0,
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1,
                 }]
             };
             setPieData1(pieChartData1);
@@ -135,7 +140,8 @@ function InsightsPage() {
                         // ----This allows the mapping to cycle through the list. This allows it to reuse colours if there are more entries than colours
                         graphColours[index % graphColours.length]
                     ),
-                    borderWidth: 0,
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1,
                 }]
             };
             setPieData2(pieChartData2);

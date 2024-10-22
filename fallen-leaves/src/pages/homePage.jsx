@@ -115,8 +115,8 @@ function HomePage() {
                         chartData.datasets.push({
                             label: habit.habitName,
                             data: firstSixEntries.map(entry => entry.value),
-                            backgroundColor: index === 0 ? 'rgba(209, 90, 78, 1)' : 'rgba(242, 160, 123, 1)',
-                            borderColor: index === 0 ? 'rgba(209, 90, 78, 1)' : 'rgba(242, 160, 123, 1)',
+                            backgroundColor: index === 0 ? 'rgba(178, 128, 167, 1)' : 'rgba(242, 160, 123, 1)',
+                            borderColor: index === 0 ? 'rgba(178, 128, 167, 1)' : 'rgba(242, 160, 123, 1)',
                             borderWidth: 1,
                         });
                     });
@@ -245,7 +245,7 @@ function HomePage() {
                             </p>
                         ) : (
                             // Spacer that stops rendering when the text is visible
-                            <div style={{ height: '25px', width: '1px' }}></div>
+                            <div className={styles.addHabitSpacer}></div>
                         )}
 
                         <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleGoalChange}>
@@ -254,8 +254,8 @@ function HomePage() {
                             <option value="reduce">Reduce current value</option>
                         </select>
 
-                        <button className='btnSecondaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
-                        <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
+                        <button className='btnPrimaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
+                        <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
                             Cancel
                         </button>
                     </div>
@@ -289,8 +289,8 @@ function HomePage() {
                             className={styles.sedEntry}
                         />
 
-                        <button className='btnSecondaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
-                        <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
+                        <button className='btnPrimaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
+                        <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
                             Cancel
                         </button>
                     </div>
