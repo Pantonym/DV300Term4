@@ -19,6 +19,15 @@ function InsightsPage() {
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState('');
 
+    // --Acceptable colours for the graphs
+    const graphColours = [
+        'rgba(246, 180, 196, 0.8)', // Muted pink
+        '#b280a7',       // Muted purple
+        'rgba(223, 200, 100, 0.6)', // Soft gold
+        '#4e0039',       // Deep plum
+        '#e7b87b'        // Warm beige
+    ]
+
     // --Collect user info
     useEffect(() => {
         if (currentUser) {
@@ -123,7 +132,8 @@ function InsightsPage() {
                 datasets: [{
                     data: filteredEntries.map(entry => parseFloat(entry.value)),
                     backgroundColor: filteredEntries.map((_, index) =>
-                        `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
+                        // ----This allows the mapping to cycle through the list. This allows it to reuse colours if there are more entries than colours
+                        graphColours[index % graphColours.length]
                     ),
                     borderWidth: 0,
                 }]

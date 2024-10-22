@@ -348,17 +348,17 @@ function HabitsPage() {
                         </p>
                     ) : (
                         // Spacer that stops rendering when the text is visible
-                        <div style={{ height: '25px', width: '1px' }}></div>
+                        <div className={styles.addHabitSpacer}></div>
                     )}
 
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} inter_font`} onChange={handleGoalChange}>
+                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleGoalChange}>
                         <option value="">Select a Goal</option>
                         <option value="maintain">Maintain current value</option>
                         <option value="reduce">Reduce current value</option>
                     </select>
 
-                    <button className='btnSecondaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
+                    <button className='btnPrimaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
+                    <button className='btnSecondaryDesktop' style={{ color: 'white'}} onClick={() => setHabitFormShow(false)}>
                         Cancel
                     </button>
                 </div>
@@ -379,8 +379,8 @@ function HabitsPage() {
                         className={styles.sedEntry}
                     />
 
-                    <button className='btnSecondaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
-                    <button className='btnPrimaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
+                    <button className='btnPrimaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
+                    <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
                         Cancel
                     </button>
                 </div>
