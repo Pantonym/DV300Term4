@@ -178,7 +178,6 @@ function HabitsPage() {
     };
 
     // Add an entry
-    // TODO: It is not adding the entry that completed the goal when generating a new insight
     const handleAddEntrySubmissionClick = async () => {
         console.log('Selected habit to display:', selectedHabitToDisplay);
         console.log('User ID:', userID);
@@ -210,18 +209,42 @@ function HabitsPage() {
                 // ----Update the current progress in the Firestore document for the insight
                 await updateInsight(userID, selectedInsightToDisplay.id, { current: newCurrent });
 
-                // If goal is completed, generate a new insight
+                // ----If goal is completed, add the new entry and generate a new insight
                 if (newCurrent >= selectedInsightToDisplay.suggestedGoal) {
+                    // ----Update the local version of selectedHabitToDisplay
+                    const updatedEntries = [...selectedHabitToDisplay.entries, newEntry];
+                    const updatedHabit = {
+                        ...selectedHabitToDisplay,
+                        entries: updatedEntries,
+                    };
+
+                    // --Update the displayed entries for the selected habit
+                    setEntries(updatedEntries);
+                    setSelectedHabitToDisplay(updatedHabit); // Update the entire habit
+
+                    // ----Add the entry to the Firestore document for the selected habit
+                    await addEntryToHabit(userID, selectedHabitToDisplay.id, newEntry);
+
+                    // ----Update the insight and generate a new one with the updated habit
                     await updateInsight(userID, selectedInsightToDisplay.id, { completed: true });
-                    handleGenerateInsight(); // Call to generate a new insight
+                    handleGenerateInsight(updatedHabit); // Pass the updated habit to ensure new entry is included
+                } else {
+                    // --Update the displayed entries for the selected habit
+                    const updatedEntries = [...entries, newEntry];  // Store updated entries locally
+                    const updatedHabit = {
+                        ...selectedHabitToDisplay,
+                        entries: updatedEntries,
+                    };
+
+                    // ----Update the local version of selectedHabitToDisplay
+                    setEntries(updatedEntries);
+                    setSelectedHabitToDisplay(updatedHabit); // Update the entire habit locally
+
+                    // ----Add the entry to the Firestore document for the selected habit
+                    await addEntryToHabit(userID, selectedHabitToDisplay.id, newEntry);
                 }
             }
 
-            // --Add the entry to the Firestore document for the selected habit
-            await addEntryToHabit(userID, selectedHabitToDisplay.id, newEntry);
-
-            // --Update the displayed entries for the selected habit
-            setEntries([...entries, newEntry]);
             setEntryFormShow(false); // ----Close the form
 
             alert('Entry added successfully!');
@@ -232,11 +255,11 @@ function HabitsPage() {
     };
 
     // SECTION: Generate insights
-    const handleGenerateInsight = async () => {
+    const handleGenerateInsight = async (updatedHabit = selectedHabitToDisplay) => {
         setLoading(true);
         try {
             // Ensure the habit data is formatted correctly for the API
-            const formattedHabitData = formatForApi(selectedHabitToDisplay);
+            const formattedHabitData = formatForApi(updatedHabit);
             console.log(formattedHabitData);
 
             // Call the OpenAI API to generate insights

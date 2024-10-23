@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, Timestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
@@ -10,15 +10,36 @@ axiosRetry(axios, {
     retryDelay: (retryCount) => retryCount * 2000 // Retry after an increasing delay (2 seconds)
 });
 
-// API Key
-const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-
 // Open AI Base url
 const API_URL = 'https://api.openai.com/v1/chat/completions';
+
+// Function to get API key from Firestore
+const getAPIKeyFromFirestore = async () => {
+    try {
+        const docRef = doc(db, 'apiKeys', 'fXR1vblvAzaVP9Mog5mX');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists) {
+            return docSnap.data().OpenAI;  // Retrieve the OpenAI API key from Firestore
+        } else {
+            throw new Error('API key not found in Firestore.');
+        }
+    } catch (error) {
+        console.error('Error retrieving API key from Firestore:', error);
+        throw error;  // Propagate the error
+    }
+};
 
 // Call the AI to create insights
 export const callOpenAiAPI = async (habitData) => {
     try {
+        // Retrieve API key from Firestore
+        const apiKey = await getAPIKeyFromFirestore();
+
+        if (!apiKey) {
+            throw new Error("API key is missing. Please check your environment variables.");
+        }
+
         const prompt = `Analyze the following habit data and provide insights.
         - Identify patterns, trends, and fluctuations in the habit data.
         - Provide 2-3 personalized recommendations based on the data.
@@ -28,10 +49,6 @@ export const callOpenAiAPI = async (habitData) => {
         - The goal should be realistic based on the analysis of the data. 
         - **IMPORTANT**: In addition, provide a suitable title in the exact format [TITLE: string].
         Data: ${habitData}`;
-
-        if (!apiKey) {
-            throw new Error("API key is missing. Please check your environment variables.");
-        }
 
         const response = await axios.post(API_URL, {
             model: 'gpt-3.5-turbo', // Use the gpt-3.5-turbo model

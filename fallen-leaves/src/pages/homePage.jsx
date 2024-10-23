@@ -223,6 +223,7 @@ function HomePage() {
         <div>
             <div className={styles.bodyBG}></div>
             <div>
+
                 {/* FORM TO ADD A HABIT */}
                 {habitFormShow && (
                     <div className={styles.habitsForm}>

@@ -4,7 +4,7 @@ import PieChart from '../components/charts/PieChart'
 import { Oval } from 'react-loader-spinner';
 import { useAuth } from '../contexts/authContext';
 import { getUserHabits } from '../services/habitService';
-import { addInsight, getUserInsights } from '../services/insightsService';
+import { getUserInsights } from '../services/insightsService';
 
 function InsightsPage() {
     // Chart Data
@@ -132,19 +132,32 @@ function InsightsPage() {
             const filteredEntries = habit.entries.filter(entry => entry.date.toDate() > selectedInsightToDisplay.dateAdded.toDate());
 
             // --Create the second pie chart for the overall entries contribution after the dateAdded
-            const pieChartData2 = {
-                labels: filteredEntries.map((entry, index) => `Entry ${index + 1}`),
-                datasets: [{
-                    data: filteredEntries.map(entry => parseFloat(entry.value)),
-                    backgroundColor: filteredEntries.map((_, index) =>
-                        // ----This allows the mapping to cycle through the list. This allows it to reuse colours if there are more entries than colours
-                        graphColours[index % graphColours.length]
-                    ),
-                    borderColor: 'rgba(0, 0, 0, 1)',
-                    borderWidth: 1,
-                }]
-            };
-            setPieData2(pieChartData2);
+            if (filteredEntries.length > 0) {
+                const pieChartData2 = {
+                    labels: filteredEntries.map((entry, index) => `Entry ${index + 1}`),
+                    datasets: [{
+                        data: filteredEntries.map(entry => parseFloat(entry.value)),
+                        backgroundColor: filteredEntries.map((_, index) =>
+                            // ----This allows the mapping to cycle through the list. This allows it to reuse colours if there are more entries than colours
+                            graphColours[index % graphColours.length]
+                        ),
+                        borderColor: 'rgba(0, 0, 0, 1)',
+                        borderWidth: 1,
+                    }]
+                };
+                setPieData2(pieChartData2);
+            } else {
+                // --If there are no entries, set an empty dataset to render a blank chart
+                const blankPieChartData = {
+                    labels: ['No Entries Have Been Added Yet'],
+                    datasets: [{
+                        data: [1], // A single value for "No Data"
+                        backgroundColor: ['rgba(215, 91, 48, 0.5)'], // Background for "No Data"
+                        borderWidth: 0,
+                    }]
+                };
+                setPieData2(blankPieChartData); // Set blank data for empty chart
+            }
 
             setLoading(false);
         }
