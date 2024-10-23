@@ -253,8 +253,18 @@
 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 975px) {
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .welcomeCard {
         margin-right: 0px;
+        margin-bottom: 15px;
+    }
+
+    .totalGoalProgressCard {
+        padding: 15px;
     }
 
     .totalGoalProgressCard {
@@ -302,8 +312,11 @@
         display: none;
     }
 
+    .progressContainer h1 {
+        margin-bottom: 30px;
+    }
+
     .progressCard {
-        height: auto;
-        padding-top: 20px;
+        margin-bottom: 15px;
     }
 }
