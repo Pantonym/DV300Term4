@@ -1,17 +1,18 @@
 {
   "files": {
-    "main.css": "/DV300Term4/static/css/main.41b63b90.css",
-    "main.js": "/DV300Term4/static/js/main.06a6e31b.js",
+    "main.css": "/DV300Term4/static/css/main.917b52c3.css",
+    "main.js": "/DV300Term4/static/js/main.5c7b5caa.js",
     "static/js/453.7ad270d4.chunk.js": "/DV300Term4/static/js/453.7ad270d4.chunk.js",
-    "static/media/bgLeaf.png": "/DV300Term4/static/media/bgLeaf.61341588dfaff035f54d.png",
+    "static/media/backgroundDashboard.jpg": "/DV300Term4/static/media/backgroundDashboard.add55ec0ec0b49226e64.jpg",
+    "static/media/backgroundLogin.jpg": "/DV300Term4/static/media/backgroundLogin.cce77d6978f23cabf64e.jpg",
     "static/media/AppIcon.png": "/DV300Term4/static/media/AppIcon.f684fa4cf22b6c3a726b.png",
     "index.html": "/DV300Term4/index.html",
-    "main.41b63b90.css.map": "/DV300Term4/static/css/main.41b63b90.css.map",
-    "main.06a6e31b.js.map": "/DV300Term4/static/js/main.06a6e31b.js.map",
+    "main.917b52c3.css.map": "/DV300Term4/static/css/main.917b52c3.css.map",
+    "main.5c7b5caa.js.map": "/DV300Term4/static/js/main.5c7b5caa.js.map",
     "453.7ad270d4.chunk.js.map": "/DV300Term4/static/js/453.7ad270d4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.41b63b90.css",
-    "static/js/main.06a6e31b.js"
+    "static/css/main.917b52c3.css",
+    "static/js/main.5c7b5caa.js"
   ]
 }
