@@ -1,0 +1,309 @@
+.bodyBG {
+    background-image: url('../../assets/backgroundDashboard.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    z-index: -1;
+}
+
+/* SECTION: DASHBOARD CSS */
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcomeCard {
+    width: fit-content;
+    min-height: 300px;
+    max-width: 750px;
+    height: fit-content;
+
+    background-color: #F6DFB1;
+    border-radius: 15px;
+
+    padding: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+
+    display: flex;
+    flex-direction: row;
+
+    margin-right: 10px;
+}
+
+.welcomeCard p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.welcomeCard h1 {
+    margin: 0px;
+}
+
+.welcomeImage {
+    width: 200px;
+    height: 200px;
+}
+
+.totalGoalProgressCard {
+    background-color: #F6DFB1;
+    padding: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    border-radius: 15px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 10px;
+}
+
+.totalGoalsChart {
+    width: 65%;
+    max-width: 250px;
+    height: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.headingButton {
+    color: white;
+    background-color: transparent;
+
+    margin-top: 10px;
+    font-size: 24px;
+
+    border: none;
+    cursor: pointer;
+}
+
+.card {
+    width: 175px;
+    height: 175px;
+
+    margin-bottom: 25px;
+    margin-right: 25px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+
+    background-color: #7d0541;
+
+    border-radius: 15px;
+}
+
+.habitsForm {
+    position: absolute;
+    z-index: 7;
+    left: 40%;
+    top: 200px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    width: 460px;
+    height: auto;
+
+    background-color: #D75B30;
+    border-radius: 25px;
+
+    padding: 20px;
+    padding-bottom: 40px;
+}
+
+.fontWhite {
+    color: white;
+}
+
+.sedEntry {
+    font-size: 24px;
+    height: 50px;
+    width: 95%;
+
+    margin-top: 15px;
+
+    padding-left: 10px;
+    border-radius: 15px;
+}
+
+.habitDescription {
+    background-color: #D75B30;
+    font-size: 20px;
+    color: white;
+}
+
+.habitSelect {
+    width: 100%;
+    height: 60px;
+
+    padding: 10px;
+    padding-left: 15px;
+
+    align-self: center;
+
+    font-size: 22px;
+    color: black;
+
+    border: 3px solid #F6DFB1;
+    border-radius: 15px;
+
+    /* Creating a unique arrow: */
+    /* --Hide default arrow for chrome, safari and firefox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* --Receive the unique icon, change its size and move it to the right */
+    background: white url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath fill="black" d="M0 0h10L5 6z"/%3E%3C/svg%3E') no-repeat right 10px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.habitSelect option {
+    color: black;
+}
+
+.addHabitSpacer {
+    height: 25px;
+    width: 1px;
+}
+
+.barChartCard {
+    width: 100%;
+    min-height: 300px;
+    max-width: 750px;
+
+    background-color: #F6DFB1;
+
+    padding: 15px;
+    padding-left: 23px;
+    padding-right: 23px;
+
+    border-radius: 15px;
+    border: 4px solid #F6DFB1;
+}
+
+.barChartCard h1 {
+    margin: 0px;
+}
+
+.progressContainer {
+    width: 100%;
+
+    background-color: #F6DFB1;
+    border-radius: 15px;
+
+    padding: 50px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.progressContainer h1 {
+    margin-top: 0px;
+}
+
+.progressCard {
+    width: fit-content;
+    min-width: 250px;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+
+    border-radius: 15px;
+
+    padding-bottom: 20px;
+
+    background-color: none;
+    border: 5px solid #D75B30;
+}
+
+.donutChart {
+    height: auto;
+    width: 150px;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 975px) {
+    .welcomeCard {
+        margin-right: 0px;
+    }
+
+    .totalGoalProgressCard {
+        margin-left: 0px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .card {
+        margin-right: 0px;
+    }
+
+    .habitSelect {
+        margin-top: 25px;
+
+        font-size: 18px;
+        align-self: center;
+    }
+
+    .habitsForm {
+        left: auto;
+        top: 200px;
+
+        width: 250px;
+
+        padding: 20px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .addHabitSpacer {
+        height: 0px;
+    }
+
+    .sedEntry {
+        font-size: 22px;
+        width: 90%;
+
+        margin-bottom: 0px;
+    }
+
+    .arrowImg {
+        display: none;
+    }
+
+    .progressCard {
+        height: auto;
+        padding-top: 20px;
+    }
+}

@@ -4,11 +4,16 @@ import { Link, useLocation } from 'react-router-dom'
 import styles from './NavbarComponent.module.css';
 // Images
 import Logo from '../../assets/AppIcon.png'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/authContext';
 
 function NavbarComponent() {
     const [menuOpen, setMenuOpen] = useState(false); //for mobile burger menu
     // Get the current URL location
     const location = useLocation();
+    // Enable navigation
+    const navigate = useNavigate();
+    const { logout } = useAuth();
 
     // Determine which index should be active based on the current path
     const getActiveIndexFromPath = (path) => {
@@ -21,8 +26,6 @@ function NavbarComponent() {
                 return 1;
             case '/insights':
                 return 2;
-            case '/account':
-                return 3;
             default:
                 return 0; // Defaults to Dashboard if no path matches
         }
@@ -38,6 +41,23 @@ function NavbarComponent() {
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
+    };
+
+    // Confirm is the user wants to log out, and if they do log out and navigate to the login page
+    const handleLogout = async () => {
+        const confirmed = window.confirm('Are you sure you want to log out?');
+
+        if (confirmed) {
+            try {
+                await logout();
+                console.log('Successfully logged out');
+                navigate('/login');
+            } catch (error) {
+                console.error('Logout Error:', error);
+            }
+        } else {
+            console.log('Logout canceled');
+        }
     };
 
     return (
@@ -77,14 +97,10 @@ function NavbarComponent() {
                             {activeIndex === 2 && <h2>Insights</h2>}
                         </div>
                     </Link>
-
-                    <Link to="/account" className={styles.navLink}>
-                        <div>
-                            <ion-icon name="person-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
-                            {activeIndex === 3 && <h2>Account</h2>}
-                        </div>
-                    </Link>
                 </nav>
+
+                {/* TODO: Style button */}
+                <button style={{ alignSelf: 'center' }} className={styles.logoutButton} onClick={handleLogout}>Log Out</button>
             </div>
         </div>
     )
