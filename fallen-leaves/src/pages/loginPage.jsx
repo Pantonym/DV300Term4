@@ -24,6 +24,8 @@ function LoginPage() {
         setIsLoginFormVisible(!isLoginFormVisible);
     };
 
+    // TODO: BUTTON PRIMARY NOT SECONDARY
+
     // Registration function
     const handleRegister = async (e) => {
         // Stops the page from being reloaded on form submit

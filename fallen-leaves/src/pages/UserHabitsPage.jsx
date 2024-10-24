@@ -1,13 +1,22 @@
+// Default imports
 import React, { useEffect, useState } from 'react'
-import styles from './css/HabitsPage.module.css'
+import styles from './css/UserHabitsPage.module.css'
+// Charts
+import PieChart from '../components/charts/PieChart'
+// Loader
 import { Oval } from 'react-loader-spinner';
-import { addEntryToHabit, addNewHabit, checkHabitExists, formatForApi, getUserHabits } from '../services/habitService';
+// Auth and navigation
 import { useAuth } from '../contexts/authContext';
-import { addInsight, callOpenAiAPI, getUserInsights, updateInsight } from '../services/insightsService';
 import { useNavigate } from 'react-router-dom';
+// Service Functions
+// --Habits Service
+import { addEntryToHabit, addNewHabit, checkHabitExists, formatForApi, getUserHabits } from '../services/habitService';
+// --Insights Service
+import { addInsight, callOpenAiAPI, getUserInsights, updateInsight } from '../services/insightsService';
 
-function HabitsPage() {
-    // Form Control
+function UserHabitsPage() {
+    // SECTION: HABITS PAGE USESTATES
+    // Form Controls
     const [entryFormShow, setEntryFormShow] = useState(false);
     const [habitFormShow, setHabitFormShow] = useState(false);
     const [selectedHabit, setSelectedHabit] = useState('');
@@ -16,17 +25,22 @@ function HabitsPage() {
     const [loading, setLoading] = useState(true);
     // Navigation
     const navigate = useNavigate();
-    // User Info
+    // User Data
     const { currentUser } = useAuth();
     const [userID, setUserID] = useState();
     const [habits, setHabits] = useState([]);
     const [insights, setInsights] = useState([]);
     const [entries, setEntries] = useState([]);
-    const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
+    // Chart Data
+    const [pieData1, setPieData1] = useState(null);
+    const [pieData2, setPieData2] = useState(null);
+    // Display Data
     const [unit, setUnit] = useState('');
+    const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
+    const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState('');
     const [entryValue, setEntryValue] = useState(0);
-    const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState(''); // --Gets the active insight from the insights collection
 
+    // SECTION: HABITS PAGE FUNCTIONS
     // Navigation function
     const handleViewAllEntries = () => {
         navigate('/allEntries', { state: { habit: selectedHabitToDisplay } });
@@ -89,14 +103,6 @@ function HabitsPage() {
             console.error('Error fetching data:', error);
         }
     };
-
-    // Listen for changes in selectedInsightToDisplay
-    // This is because it is asynchronous and will not be set in time, so it has to be updated when the insight is ready.
-    useEffect(() => {
-        if (selectedInsightToDisplay) {
-            console.log("Selected Insight has been updated:", selectedInsightToDisplay.insightTitle);
-        }
-    }, [selectedInsightToDisplay]); // --This will run whenever selectedInsightToDisplay is updated
 
     // Find the insight that matches the active habit
     const findActiveInsightForHabit = (habitId, insights) => {
@@ -242,6 +248,7 @@ function HabitsPage() {
 
                     // ----Add the entry to the Firestore document for the selected habit
                     await addEntryToHabit(userID, selectedHabitToDisplay.id, newEntry);
+                    fetchUserData(currentUser.uid);
                 }
             }
 
@@ -343,7 +350,96 @@ function HabitsPage() {
         }
     }
 
-    // Loader
+    // SECTION: INSIGHTS PAGE FUNCTIONS
+    // --Acceptable colours for the graphs' backgrounds
+    const graphColours = [
+        'rgba(246, 180, 196, 0.6)', // Muted pink
+        'rgba(178, 128, 167, 0.6)', // Muted purple
+        'rgba(223, 200, 100, 0.6)', // Soft gold
+        'rgba(78, 0, 57, 0.6)',     // Deep plum
+        'rgba(231, 184, 123, 0.6)', // Warm beige
+        'rgba(192, 132, 151, 0.6)', // Soft Rose
+        'rgba(211, 149, 130, 0.6)', // Soft Coral
+        'rgba(111, 76, 91, 0.6)',   // Deep Mulberry
+        'rgba(236, 193, 119, 0.6)', // Warm Honey
+        'rgba(255, 216, 168, 0.6)'  // Soft Peach
+    ];
+
+    // Listen for changes to the habits and the insights - then regenerate the pie charts
+    useEffect(() => {
+        if (selectedHabitToDisplay && insights.length > 0) {
+            const activeInsight = findActiveInsightForHabit(selectedHabitToDisplay.id, insights);
+            setSelectedInsightToDisplay(activeInsight);
+
+            if (activeInsight) {
+                generatePieCharts(selectedHabitToDisplay);
+            }
+        }
+    }, [selectedHabitToDisplay, insights]);
+
+    // Generate pie chart data based on the habit's progress and goals
+    const generatePieCharts = async (habit) => {
+        if (habit && habit.entries.length > 0 && selectedInsightToDisplay) {
+            // --Default to 0 if no data is available
+            const currentGoal = selectedInsightToDisplay.current || 0;
+            const suggestedGoal = selectedInsightToDisplay.suggestedGoal || 0;
+
+            // --Check to see what percentage the user has completed of their goal
+            const completionPercentage = (currentGoal / suggestedGoal) * 100;
+            const remainingPercentage = 100 - completionPercentage;
+
+            // --Create the first pie chart for habit progress based on the insight data
+            const pieChartData1 = {
+                labels: ['Completed', 'Remaining'],
+                datasets: [{
+                    data: [completionPercentage, remainingPercentage],
+                    backgroundColor: ['rgba(225, 173, 1, 0.6)', 'rgba(125, 5, 65, 0.6)'],
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1,
+                }]
+            };
+            setPieData1(pieChartData1);
+
+            // --Filter the entries based on the insight's dateAdded
+            const filteredEntries = habit.entries.filter(entry => {
+                const entryDate = entry.date.toDate ? entry.date.toDate() : new Date(entry.date);  // Check if it's a Firestore Timestamp or a Date string
+                const insightDate = selectedInsightToDisplay.dateAdded.toDate();  // Assuming dateAdded is always a Timestamp
+                return entryDate > insightDate;
+            });
+
+            // --Create the second pie chart for the overall entries contribution after the dateAdded
+            if (filteredEntries.length > 0) {
+                const pieChartData2 = {
+                    labels: filteredEntries.map((entry, index) => `Entry ${index + 1}`),
+                    datasets: [{
+                        data: filteredEntries.map(entry => parseFloat(entry.value)),
+                        backgroundColor: filteredEntries.map((_, index) =>
+                            // ----This allows the mapping to cycle through the list. This allows it to reuse colours if there are more entries than colours
+                            graphColours[index % graphColours.length]
+                        ),
+                        borderColor: 'rgba(0, 0, 0, 1)',
+                        borderWidth: 1,
+                    }]
+                };
+                setPieData2(pieChartData2);
+            } else {
+                // --If there are no entries, set an empty dataset to render a blank chart
+                const blankPieChartData = {
+                    labels: ['No Entries Have Been Added Yet'],
+                    datasets: [{
+                        data: [1], // A single value for "No Data"
+                        backgroundColor: ['rgba(215, 91, 48, 0.5)'], // Background for "No Data"
+                        borderWidth: 0,
+                    }]
+                };
+                setPieData2(blankPieChartData); // Set blank data for empty chart
+            }
+
+            setLoading(false);
+        }
+    };
+
+    // SECTION: Loader
     if (loading) {
         return (
             <div className="loadingContainer">
@@ -355,133 +451,163 @@ function HabitsPage() {
 
     return (
         <div>
-            <div className={styles.bodyBG}></div>
-            {/* FORM TO ADD A HABIT */}
-            {habitFormShow && (
-                <div className={styles.habitsForm}>
-                    <h1 className={styles.fontWhite}>Add Habit</h1>
+            {/* SECTION: HABITS PAGE DISPLAY */}
+            <div>
+                <div className={styles.bodyBG}></div>
+                {/* SECTION: FORM TO ADD A HABIT */}
+                {habitFormShow && (
+                    <div className={styles.habitsForm}>
+                        <h1 className={styles.fontWhite}>Add Habit</h1>
 
-                    {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleHabitChange}>
-                        <option value="">Select a Habit</option>
-                        <option value="recycling">Recycling</option>
-                        <option value="composting">Composting</option>
-                        <option value="energyUsage">Energy Usage</option>
-                        <option value="waterConservation">Water Conservation</option>
-                        <option value="reusableBags">Reusable Bags</option>
-                    </select>
+                        {/* TODO: Future implementation, populate only with habits the user doesn't have */}
+                        <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitChange}>
+                            <option value="">Select a Habit</option>
+                            <option value="recycling">Recycling</option>
+                            <option value="composting">Composting</option>
+                            <option value="energyUsage">Energy Usage</option>
+                            <option value="waterConservation">Water Conservation</option>
+                            <option value="reusableBags">Reusable Bags</option>
+                        </select>
 
-                    {/* Description of the selected habit */}
-                    {selectedHabit ? (
-                        <p className={styles.habitDescription}>
-                            {habitDescriptions[selectedHabit]}
-                        </p>
-                    ) : (
-                        // Spacer that stops rendering when the text is visible
-                        <div className={styles.addHabitSpacer}></div>
-                    )}
-
-                    <select id="addHabitDropdown" className={`${styles.addHabitSelect} lora_font`} onChange={handleGoalChange}>
-                        <option value="">Select a Goal</option>
-                        <option value="increase">Increase current value</option>
-                        <option value="maintain">Maintain current value</option>
-                        <option value="reduce">Reduce current value</option>
-                    </select>
-
-                    <button className='btnPrimaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
-                    <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            {/* FORM TO ADD AN ENTRY */}
-            {entryFormShow && (
-                <div className={styles.habitsForm}>
-                    <h1 className={styles.fontWhite}>Add Entry (in {unit})</h1>
-
-                    {/* Input field for the entry value */}
-                    <input
-                        type='number'
-                        value={entryValue}
-                        placeholder={0}
-                        min={0}
-                        onChange={handleEntryValueChange}
-                        className={styles.sedEntry}
-                    />
-
-                    <button className='btnPrimaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
-                    <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
-                        Cancel
-                    </button>
-                </div>
-            )}
-
-            {/* DISPLAYING HABIT DROPDOWN AND TABLE */}
-            <div
-                className={styles.container}
-                style={{
-                    // Set opacity to 50% when the forms are shown
-                    opacity: habitFormShow || entryFormShow ? '50%' : '100%',
-                    // Disable interactions when forms are shown
-                    pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
-                }}
-            >
-                {/* Choose which habit to display */}
-                <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
-                    {habits.map(habit => (
-                        <option key={habit.id} value={habit.id}>
-                            {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
-                        </option>
-                    ))}
-                </select>
-
-                {/* Display the entries of that habit */}
-                <table className={styles.table}>
-                    <thead className='lora_font'>
-                        <tr>
-                            <th>Entry Date/Time</th>
-                            <th>Entry Data</th>
-                        </tr>
-                    </thead>
-                    <tbody className='inter_font'>
-                        {entries.length > 0 ? (
-                            entries.map((entry, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        {entry.date.toDate ? new Date(entry.date.toDate()).toLocaleString() : new Date(entry.date).toLocaleString()}
-                                    </td>
-                                    <td>{entry.value} {entry.unit}</td>
-                                </tr>
-                            ))
+                        {/* Description of the selected habit */}
+                        {selectedHabit ? (
+                            <p className={styles.habitDescription}>
+                                {habitDescriptions[selectedHabit]}
+                            </p>
                         ) : (
-                            <tr>
-                                <td colSpan="2">No entries for this habit.</td>
-                            </tr>
+                            // Spacer that stops rendering when the text is visible
+                            <div className={styles.addHabitSpacer}></div>
                         )}
 
-                        <tr>
-                            <td colSpan="2" className={styles.btnRow}>
-                                <button className={styles.btnAllEntries} onClick={handleViewAllEntries}>
-                                    View All Entries
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleGoalChange}>
+                            <option value="">Select a Goal</option>
+                            <option value="increase">Increase current value</option>
+                            <option value="maintain">Maintain current value</option>
+                            <option value="reduce">Reduce current value</option>
+                        </select>
 
-                {/* Add an entry or a habit buttons */}
-                <div className={styles.buttons}>
-                    <button className='btnPrimaryDesktop' onClick={() => setEntryFormShow(true)}>
-                        Add Entry
-                    </button>
-                    <button className='btnSecondaryDesktop' onClick={() => setHabitFormShow(true)}>
-                        Add Habit
-                    </button>
+                        <button className='btnPrimaryDesktop' onClick={handleHabitConfirmClick}>Confirm</button>
+                        <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setHabitFormShow(false)}>
+                            Cancel
+                        </button>
+                    </div>
+                )}
+
+                {/* FORM TO ADD AN ENTRY */}
+                {entryFormShow && (
+                    <div className={styles.habitsForm}>
+                        <h1 className={styles.fontWhite}>Add Entry (in {unit})</h1>
+
+                        {/* Input field for the entry value */}
+                        <input
+                            type='number'
+                            value={entryValue}
+                            placeholder={0}
+                            min={0}
+                            onChange={handleEntryValueChange}
+                            className={styles.sedEntry}
+                        />
+
+                        <button className='btnPrimaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
+                        <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
+                            Cancel
+                        </button>
+                    </div>
+                )}
+
+                {/* DISPLAYING HABIT DROPDOWN AND TABLE */}
+                <div
+                    className={styles.container}
+                    style={{
+                        // Set opacity to 50% when the forms are shown
+                        opacity: habitFormShow || entryFormShow ? '50%' : '100%',
+                        // Disable interactions when forms are shown
+                        pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
+                    }}
+                >
+                    {/* TODO: Whenever user data is generated, set the first option to active */}
+                    {/* Choose which habit to display */}
+                    <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
+                        {habits.map(habit => (
+                            <option key={habit.id} value={habit.id}>
+                                {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Display the entries of that habit */}
+                    <table className={styles.table}>
+                        <thead className='lora_font'>
+                            <tr>
+                                <th>Entry Date/Time</th>
+                                <th>Entry Data</th>
+                            </tr>
+                        </thead>
+                        <tbody className='inter_font'>
+                            {entries.length > 0 ? (
+                                entries.map((entry, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            {entry.date.toDate ? new Date(entry.date.toDate()).toLocaleString() : new Date(entry.date).toLocaleString()}
+                                        </td>
+                                        <td>{entry.value} {entry.unit}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="2">No entries for this habit.</td>
+                                </tr>
+                            )}
+
+                            <tr>
+                                <td colSpan="2" className={styles.btnRow}>
+                                    <button className={styles.btnAllEntries} onClick={handleViewAllEntries}>
+                                        View All Entries
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {/* Add an entry or a habit buttons */}
+                    <div className={styles.buttons}>
+                        <button className='btnPrimaryDesktop' onClick={() => setEntryFormShow(true)}>
+                            Add Entry
+                        </button>
+                        <button className='btnSecondaryDesktop' onClick={() => setHabitFormShow(true)}>
+                            Add Habit
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* SECTION: INSIGHTS PAGE DISPLAY */}
+            <div>
+                <div className={styles.bodyBG}></div>
+                <div className={styles.container}>
+                    <div className={styles.pies}>
+                        <div className={styles.pieChart}>
+                            {pieData1 ? <PieChart chartData={pieData1} /> : <p>Loading chart data...</p>}
+                        </div>
+                        <span style={{ width: '50px', height: '50px' }}></span>
+                        <div className={styles.pieChart}>
+                            {pieData2 ? <PieChart chartData={pieData2} /> : <p>Loading chart data...</p>}
+                        </div>
+                    </div>
+
+                    <p className={styles.feedbackHolder}
+                        dangerouslySetInnerHTML={{
+                            __html: selectedInsightToDisplay && selectedInsightToDisplay.insightText
+                                ? selectedInsightToDisplay.insightText
+                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Make bold text
+                                    .replace(/\n/g, '<br>') // Insert line breaks
+                                : 'No insights available for this habit.'
+                        }}>
+                    </p>
                 </div>
             </div>
         </div>
     )
 }
 
-export default HabitsPage
+export default UserHabitsPage

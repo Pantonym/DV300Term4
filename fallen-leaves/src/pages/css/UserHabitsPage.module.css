@@ -1,3 +1,4 @@
+/* SECTION: Habits Page CSS */
 .bodyBG {
     background-image: url('../../assets/backgroundDashboard.jpg');
     background-position: center;
@@ -17,7 +18,7 @@
 .container {
     z-index: 1;
 
-    width: auto;
+    width: 100%;
     height: auto;
 
     display: flex;
@@ -28,20 +29,20 @@
 
 /* DROPDOWN */
 .habitSelect {
-    width: 250px;
-
-    align-self: self-start;
-
-    font-size: 24px;
-    color: #9B331B;
+    width: 100%;
+    max-width: 460px;
+    height: 60px;
 
     padding: 10px;
     padding-left: 15px;
 
-    border: 4px solid #F6DFB1;
-    border-radius: 15px;
+    align-self: center;
 
-    background-color: #F6DFB1 !important;
+    font-size: 22px;
+    color: black;
+
+    border: 3px solid #F6DFB1;
+    border-radius: 15px;
 
     /* Creating a unique arrow: */
     /* --Hide default arrow for chrome, safari and firefox */
@@ -50,13 +51,13 @@
     -moz-appearance: none;
 
     /* --Receive the unique icon, change its size and move it to the right */
-    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath fill="brown" d="M0 0h10L5 6z"/%3E%3C/svg%3E') no-repeat right 10px center;
+    background: white url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath fill="black" d="M0 0h10L5 6z"/%3E%3C/svg%3E') no-repeat right 10px center;
     background-size: 16px;
     padding-right: 40px;
 }
 
 .habitSelect option {
-    background-color: #F6DFB1;
+    color: black;
 }
 
 /* TABLE */
@@ -68,12 +69,6 @@
     text-align: left;
 }
 
-.table thead tr {
-    background-color: #9B331B;
-    color: white;
-    text-align: left;
-}
-
 .table th, .table td {
     padding: 12px 15px;
     border: none;
@@ -82,14 +77,14 @@
 .table th {
     font-size: 20px;
     font-weight: 200;
+    color: white;
+    background-color: #9B331B;
 }
 
-/* --Alternates row colors */
 .table tbody tr:nth-of-type(even) {
     background-color: white;
 }
 
-/* --Alternates row colors */
 .table tbody tr {
     background-color: #F6DFB1;
 }
@@ -168,37 +163,6 @@
     color: white;
 }
 
-.addHabitSelect {
-    width: 100%;
-    height: 60px;
-
-    padding: 10px;
-    padding-left: 15px;
-
-    align-self: center;
-
-    font-size: 22px;
-    color: black;
-
-    border: 3px solid #F6DFB1;
-    border-radius: 15px;
-
-    /* Creating a unique arrow: */
-    /* --Hide default arrow for chrome, safari and firefox */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    /* --Receive the unique icon, change its size and move it to the right */
-    background: white url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath fill="black" d="M0 0h10L5 6z"/%3E%3C/svg%3E') no-repeat right 10px center;
-    background-size: 16px;
-    padding-right: 40px;
-}
-
-.addHabitSelect option {
-    background-color: white;
-}
-
 .sedEntry {
     font-size: 24px;
     height: 50px;
@@ -236,12 +200,6 @@
         width: 250px;
     }
 
-    .addHabitSelect {
-        height: 50px;
-
-        font-size: 22px;
-    }
-
     .addHabitSpacer {
         height: 0px;
     }
@@ -259,5 +217,66 @@
     .sedEntry {
         margin-top: 15px;
         margin-bottom: 0px;
+    }
+}
+
+/* SECTION: INSIGHTS PAGE CSS */
+/* DROPDOWN */
+.pies {
+    width: auto;
+    height: auto;
+
+    display: flex;
+    flex-direction: row;
+
+    margin-top: 50px;
+
+    background-color: #F6DFB1;
+    border: 4px solid #F6DFB1;
+    border-radius: 15px;
+
+    padding: 20px;
+}
+
+.pieChart {
+    width: 450px;
+    height: 450px;
+}
+
+.feedbackHolder {
+    background-color: white;
+    color: black;
+    font-size: 18px;
+
+    width: 70vw;
+    height: auto;
+
+    padding: 20px;
+
+    border: 3px solid black;
+    border-radius: 15px;
+
+    margin-top: 50px;
+}
+
+@media (max-width: 975px) {
+    .pies {
+        flex-direction: column;
+
+        margin-top: 25px;
+    }
+
+    .pieChart {
+        width: 300px;
+        height: 300px;
+    }
+
+    select {
+        width: 225px;
+        margin-top: 25px;
+
+        font-size: 18px;
+
+        align-self: center;
     }
 }

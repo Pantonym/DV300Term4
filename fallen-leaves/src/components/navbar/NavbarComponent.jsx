@@ -7,6 +7,7 @@ import Logo from '../../assets/AppIcon.png'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 
+// TODO: LOGOUT BUTTON CURSOR:POINTER AND STYLING TO NOT MATCH NAV (FIXED BOTTOM LEFT)
 function NavbarComponent() {
     const [menuOpen, setMenuOpen] = useState(false); //for mobile burger menu
     // Get the current URL location
@@ -24,8 +25,6 @@ function NavbarComponent() {
                 return 1;
             case '/allEntries':
                 return 1;
-            case '/insights':
-                return 2;
             default:
                 return 0; // Defaults to Dashboard if no path matches
         }
@@ -76,7 +75,6 @@ function NavbarComponent() {
                         </div>
                     </Link>
 
-                    {/* TODO: Change icons to #7d0541 when active */}
                     <Link to="/" className={styles.navLink}>
                         <div>
                             <ion-icon name="leaf-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
@@ -90,16 +88,8 @@ function NavbarComponent() {
                             {activeIndex === 1 && <h2>Habits</h2>}
                         </div>
                     </Link>
-
-                    <Link to="/insights" className={styles.navLink}>
-                        <div>
-                            <ion-icon name="analytics-outline" style={{ fontSize: '50px', color: 'white' }}></ion-icon>
-                            {activeIndex === 2 && <h2>Insights</h2>}
-                        </div>
-                    </Link>
                 </nav>
 
-                {/* TODO: Style button */}
                 <button style={{ alignSelf: 'center' }} className={styles.logoutButton} onClick={handleLogout}>Log Out</button>
             </div>
         </div>

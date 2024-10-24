@@ -8,13 +8,12 @@ import NavbarComponent from './components/navbar/NavbarComponent';
 // Pages
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
-import HabitsPage from './pages/HabitsPage';
-import InsightsPage from './pages/InsightsPage';
+import UserHabitsPage from './pages/UserHabitsPage';
 import DashboardPage from './pages/DashboardPage';
+import AllEntriesPage from './pages/AllEntriesPage';
 // Contexts
 import { AuthProvider } from './contexts/authContext';
 import PrivateRoute from './contexts/privateRouteContext';
-import AllEntriesPage from './pages/AllEntriesPage';
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -31,13 +30,10 @@ const AppWrapper = () => {
           <Route path="/" element={<PrivateRoute element={<DashboardPage />} />} />
 
           {/* Habits */}
-          <Route path="/habits" element={<PrivateRoute element={<HabitsPage />} />} />
+          <Route path="/habits" element={<PrivateRoute element={<UserHabitsPage />} />} />
 
           {/* --All Entries */}
           <Route path="/allEntries" element={<PrivateRoute element={<AllEntriesPage />} />} />
-
-          {/* Insights */}
-          <Route path="/insights" element={<PrivateRoute element={<InsightsPage />} />} />
 
           {/* Login */}
           <Route path="login" element={<LoginPage />} />

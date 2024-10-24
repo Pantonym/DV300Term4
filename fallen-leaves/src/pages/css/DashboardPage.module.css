@@ -14,7 +14,6 @@
     z-index: -1;
 }
 
-/* SECTION: DASHBOARD CSS */
 .row {
     display: flex;
     flex-direction: row;
@@ -244,6 +243,12 @@
 
     background-color: none;
     border: 5px solid #D75B30;
+}
+
+.backgroundLink {
+    padding-top: 10px;
+    font-size: 18px;
+    color: black;
 }
 
 .donutChart {

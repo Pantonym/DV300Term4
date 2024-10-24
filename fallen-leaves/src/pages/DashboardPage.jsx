@@ -139,7 +139,10 @@ function DashboardPage() {
         const chartData = { labels: [], datasets: [] };
         habits.forEach((habit, index) => {
             const firstSixEntries = habit.entries.slice(0, 6);
-            chartData.labels = firstSixEntries.map(entry => new Date(entry.date).toLocaleDateString());
+            chartData.labels = firstSixEntries.map(entry => {
+                const entryDate = entry.date.toDate ? entry.date.toDate() : new Date(entry.date);
+                return entryDate.toLocaleDateString();
+            });
             chartData.datasets.push({
                 label: habit.habitName,
                 data: firstSixEntries.map(entry => entry.value),
@@ -219,6 +222,7 @@ function DashboardPage() {
     };
 
     // SECTION: HABIT LORE
+    // TODO: MOVE TO CONTEXT FILE
     // --Habit Descriptions
     const habitDescriptions = {
         recycling: 'Recycling helps reduce waste by converting materials into reusable objects.',
@@ -315,6 +319,7 @@ function DashboardPage() {
 
                         <select id="addHabitDropdown" className={`${styles.habitSelect} inter_font`} onChange={handleGoalChange}>
                             <option value="">Select a Goal</option>
+                            <option value="increase">Increase current value</option>
                             <option value="maintain">Maintain current value</option>
                             <option value="reduce">Reduce current value</option>
                         </select>
@@ -456,7 +461,10 @@ function DashboardPage() {
 
                 </div>
 
-                {/* <a href="http://www.freepik.com" className={styles.backgroundLink}>Background Designed by pikisuperstar / Freepik</a> */}
+                <div className={styles.row} style={{ width: '100%', justifyContent: 'center' }}>
+                    <a href="http://www.freepik.com" className={styles.backgroundLink}>Background Designed by pikisuperstar / Freepik</a>
+                </div>
+
             </div>
         </div>
     )
