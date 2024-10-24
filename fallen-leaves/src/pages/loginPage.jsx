@@ -24,8 +24,6 @@ function LoginPage() {
         setIsLoginFormVisible(!isLoginFormVisible);
     };
 
-    // TODO: BUTTON PRIMARY NOT SECONDARY
-
     // Registration function
     const handleRegister = async (e) => {
         // Stops the page from being reloaded on form submit
@@ -106,7 +104,7 @@ function LoginPage() {
                             <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
                         </div>
 
-                        <button className='btnSecondaryDesktop' onClick={handleSignup} disabled={loading}>Submit</button>
+                        <button className='btnPrimaryDesktop' onClick={handleSignup} disabled={loading}>Submit</button>
 
                         <p className={styles.btnSwitchLabel}>Don't have an account?</p>
                         <button className={styles.btnSwitch} onClick={toggleForm} disabled={loading}>Register</button>

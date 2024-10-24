@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateHabitEntries, updateHabitEntry, updateHabitGoal } from '../services/habitService';
+import { updateHabitEntries, updateHabitGoal } from '../services/habitService';
 import styles from './css/AllEntriesPage.module.css';
 import { useAuth } from '../contexts/authContext';
 import { Timestamp } from 'firebase/firestore';
+import { getUserInsights } from '../services/insightsService';
 
 function AllEntriesPage() {
     // Navigation
     const location = useLocation();
     // User Info
     const [habit, setHabit] = useState(location.state?.habit);
+    const [insights, setInsights] = useState([]);
     const [entries, setEntries] = useState(habit ? habit.entries : []);
     const [editedEntries, setEditedEntries] = useState({});
     const [goal, setGoal] = useState(habit?.goal || '');
@@ -20,6 +22,12 @@ function AllEntriesPage() {
     useEffect(() => {
         if (currentUser) {
             setUserID(currentUser.uid);
+            const fetchData = async () => {
+                const insights = await fetchHabitInsights();
+                setInsights(insights);
+            };
+
+            fetchData();
         }
 
         // --Standardise dates to Firestore's Timestamp
@@ -36,7 +44,19 @@ function AllEntriesPage() {
 
             setEntries(standardizedEntries);
         }
-    }, [currentUser]);
+    }, [currentUser, habit]);
+
+    // Fetch insights and filter those related to the selected habit
+    const fetchHabitInsights = async () => {
+        try {
+            const allInsights = await getUserInsights(currentUser.uid); // Fetch all user insights
+            const filteredInsights = allInsights.filter(insight => insight.userHabitID === habit.id);
+            return filteredInsights;
+        } catch (error) {
+            console.error('Error fetching insights:', error);
+            return [];
+        }
+    };
 
     // Handle changes to individual entries
     const handleEntryChange = (index, field, value) => {
@@ -102,6 +122,35 @@ function AllEntriesPage() {
         }
     };
 
+    // Group the entries by their linked insights
+    const groupEntriesByInsight = () => {
+        const groupedEntries = [];
+
+        if (insights.length === 0) return [];
+
+        // Loop through each insight and find associated entries
+        insights.forEach((insight, index) => {
+            const nextInsightDate = insights[index + 1]?.dateAdded.toDate(); // Get next insight's date for comparison
+            const insightEntries = entries.filter(entry => {
+                const entryDate = entry.date.toDate ? entry.date.toDate() : new Date(entry.date);
+                const insightDate = insight.dateAdded.toDate();
+
+                // Include entries made after the current insight but before the next insight
+                return entryDate >= insightDate && (!nextInsightDate || entryDate < nextInsightDate);
+            });
+
+            groupedEntries.push({
+                insight,
+                entries: insightEntries
+            });
+        });
+
+        return groupedEntries;
+    };
+
+    // SECTION: Function to convert camel case to title case
+    const convertCamelCaseToTitle = (camelCaseStr) => camelCaseStr.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
     if (!habit) {
         return <p>No habit data available.</p>;
     }
@@ -111,7 +160,7 @@ function AllEntriesPage() {
             <div className={styles.bodyBG}></div>
 
             <div style={{ textAlign: 'center' }}>
-                <h1 className={styles.spaceForMobile}>{habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}</h1>
+                <h1 className={`${styles.spaceForMobile} ${styles.font_black}`}>{convertCamelCaseToTitle(habit.habitName)}</h1>
 
                 {/* Edit the habit's goal */}
                 <div className={styles.goalSection}>
@@ -128,9 +177,8 @@ function AllEntriesPage() {
                 </div>
 
                 {/* Edit the habit's entries */}
-                {/* TODO: Categorize table entries by the insight they are attached to */}
                 <div className={styles.entriesSection}>
-                    <h2>All Entries</h2>
+                    <h2 className={styles.font_black}>All Entries</h2>
                     <table className={styles.entriesTable}>
                         <thead>
                             <tr>
@@ -140,26 +188,39 @@ function AllEntriesPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {entries.map((entry, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        {entry.date.toDate ? new Date(entry.date.toDate()).toLocaleString() : new Date(entry.date).toLocaleString()}
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            value={editedEntries[index]?.value || entry.value}
-                                            onChange={(e) => handleEntryChange(index, 'value', e.target.value)}
-                                        />
-                                    </td>
-                                    <td>
-                                        {editedEntries[index] ? (
-                                            <button onClick={handleSaveEntries}>Save</button>
-                                        ) : (
-                                            'No changes'
-                                        )}
-                                    </td>
-                                </tr>
+                            {groupEntriesByInsight().map((group, groupIndex) => (
+                                // React.Fragment is for logical grouping only - it is similar to a div but doesn't affect styling or hierarchy.
+                                <React.Fragment key={group.insight.id}>
+                                    {/* Render Insight Section */}
+                                    <tr className={styles.insightRow}>
+                                        <td colSpan="3">
+                                            <strong>Insight: {group.insight.insightTitle}</strong> (Generated on: {new Date(group.insight.dateAdded.toDate()).toLocaleString()})
+                                        </td>
+                                    </tr>
+
+                                    {/* Render Entries Associated with the Insight */}
+                                    {group.entries.map((entry, index) => (
+                                        <tr key={index}>
+                                            <td>
+                                                {entry.date.toDate ? new Date(entry.date.toDate()).toLocaleString() : new Date(entry.date).toLocaleString()}
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    value={editedEntries[index]?.value || entry.value}
+                                                    onChange={(e) => handleEntryChange(index, 'value', e.target.value)}
+                                                />
+                                            </td>
+                                            <td>
+                                                {editedEntries[index] ? (
+                                                    <button onClick={handleSaveEntries}>Save</button>
+                                                ) : (
+                                                    'No changes'
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </React.Fragment>
                             ))}
                         </tbody>
                     </table>

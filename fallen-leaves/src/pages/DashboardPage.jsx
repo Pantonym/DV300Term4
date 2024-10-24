@@ -19,6 +19,8 @@ import { getUserProfile } from '../services/userService';
 import { addEntryToHabit, addNewHabit, checkHabitExists, getUserHabits, getHabitById } from '../services/habitService';
 // --Insight Service
 import { getUserInsights } from '../services/insightsService';
+// Habit info
+import { defaultHabits, habitDescriptions, habitUnits } from '../constants/habitsData.js';
 
 function DashboardPage() {
     // Form Controls
@@ -45,6 +47,7 @@ function DashboardPage() {
     const [selectedHabitToAddEntry, setSelectedHabitToAddEntry] = useState('')
     const [totalProgress, setTotalProgress] = useState(0);
     const [totalGoal, setTotalGoal] = useState(0);
+    const [availableHabits, setAvailableHabits] = useState([]);
 
     // SECTION: Collect user info
     useEffect(() => {
@@ -203,7 +206,6 @@ function DashboardPage() {
         try {
             console.log(userID);
 
-            // TODO: Only show habits the user doesn't have
             // Check if the habit already exists
             const habitExists = await checkHabitExists(userID, selectedHabit);
             if (habitExists) {
@@ -221,24 +223,13 @@ function DashboardPage() {
         }
     };
 
-    // SECTION: HABIT LORE
-    // TODO: MOVE TO CONTEXT FILE
-    // --Habit Descriptions
-    const habitDescriptions = {
-        recycling: 'Recycling helps reduce waste by converting materials into reusable objects.',
-        composting: 'Composting turns organic waste into valuable fertilizer for your garden.',
-        energyUsage: 'Energy conservation reduces your carbon footprint and saves on utility bills.',
-        waterConservation: 'Saving water helps preserve our planet`s most vital resource.',
-        reusableBags: 'Using reusable bags reduces plastic waste and pollution.',
-    };
-    // --Habit Units
-    const habitUnits = {
-        recycling: 'kg',
-        composting: 'kg',
-        energyUsage: 'kWh',
-        waterConservation: 'liters',
-        reusableBags: 'bags'
-    };
+    // SECTION: Filter Habits To Display
+    useEffect(() => {
+        const filteredHabits = defaultHabits.filter(
+            defaultHabit => !habits.some(userHabit => userHabit.habitName === defaultHabit)
+        );
+        setAvailableHabits(filteredHabits);
+    }, [habits]);
 
     // SECTION: ENTRY FORM
     // --Entry value change
@@ -297,15 +288,18 @@ function DashboardPage() {
                     <div className={styles.habitsForm}>
                         <h1 className={styles.fontWhite}>Add Habit</h1>
 
-                        {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                        <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitChange}>
-                            <option value="">Select a Habit</option>
-                            <option value="recycling">Recycling</option>
-                            <option value="composting">Composting</option>
-                            <option value="energyUsage">Energy Usage</option>
-                            <option value="waterConservation">Water Conservation</option>
-                            <option value="reusableBags">Reusable Bags</option>
-                        </select>
+                        {availableHabits.length > 0 ? (
+                            <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitChange}>
+                                <option value="">Select a Habit</option>
+                                {availableHabits.map(habit => (
+                                    <option key={habit} value={habit}>
+                                        {convertCamelCaseToTitle(habit)}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <p>No available habits to add.</p>
+                        )}
 
                         {/* Description of the selected habit */}
                         {selectedHabit ? (

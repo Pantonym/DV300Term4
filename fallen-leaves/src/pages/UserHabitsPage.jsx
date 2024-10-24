@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { addEntryToHabit, addNewHabit, checkHabitExists, formatForApi, getUserHabits } from '../services/habitService';
 // --Insights Service
 import { addInsight, callOpenAiAPI, getUserInsights, updateInsight } from '../services/insightsService';
+// Habit info
+import { defaultHabits, habitDescriptions, habitUnits } from '../constants/habitsData.js';
 
 function UserHabitsPage() {
     // SECTION: HABITS PAGE USESTATES
@@ -39,6 +41,7 @@ function UserHabitsPage() {
     const [selectedHabitToDisplay, setSelectedHabitToDisplay] = useState('');
     const [selectedInsightToDisplay, setSelectedInsightToDisplay] = useState('');
     const [entryValue, setEntryValue] = useState(0);
+    const [availableHabits, setAvailableHabits] = useState([]);
 
     // SECTION: HABITS PAGE FUNCTIONS
     // Navigation function
@@ -117,23 +120,13 @@ function UserHabitsPage() {
         return matchingInsight || null;
     };
 
-    // SECTION: HABIT LORE
-    // --Habit Descriptions
-    const habitDescriptions = {
-        recycling: 'Recycling helps reduce waste by converting materials into reusable objects.',
-        composting: 'Composting turns organic waste into valuable fertilizer for your garden.',
-        energyUsage: 'Energy conservation reduces your carbon footprint and saves on utility bills.',
-        waterConservation: 'Saving water helps preserve our planet`s most vital resource.',
-        reusableBags: 'Using reusable bags reduces plastic waste and pollution.',
-    };
-    // --Habit Units
-    const habitUnits = {
-        recycling: 'kg',
-        composting: 'kg',
-        energyUsage: 'kWh',
-        waterConservation: 'liters',
-        reusableBags: 'bags'
-    };
+    // SECTION: Filter Habits To Display
+    useEffect(() => {
+        const filteredHabits = defaultHabits.filter(
+            defaultHabit => !habits.some(userHabit => userHabit.habitName === defaultHabit)
+        );
+        setAvailableHabits(filteredHabits);
+    }, [habits]);
 
     // SECTION: HABIT FORM
     // Handle habit selection
@@ -439,6 +432,9 @@ function UserHabitsPage() {
         }
     };
 
+    // SECTION: Function to convert camel case to title case
+    const convertCamelCaseToTitle = (camelCaseStr) => camelCaseStr.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
     // SECTION: Loader
     if (loading) {
         return (
@@ -459,15 +455,18 @@ function UserHabitsPage() {
                     <div className={styles.habitsForm}>
                         <h1 className={styles.fontWhite}>Add Habit</h1>
 
-                        {/* TODO: Future implementation, populate only with habits the user doesn't have */}
-                        <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitChange}>
-                            <option value="">Select a Habit</option>
-                            <option value="recycling">Recycling</option>
-                            <option value="composting">Composting</option>
-                            <option value="energyUsage">Energy Usage</option>
-                            <option value="waterConservation">Water Conservation</option>
-                            <option value="reusableBags">Reusable Bags</option>
-                        </select>
+                        {availableHabits.length > 0 ? (
+                            <select id="addHabitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitChange}>
+                                <option value="">Select a Habit</option>
+                                {availableHabits.map(habit => (
+                                    <option key={habit} value={habit}>
+                                        {convertCamelCaseToTitle(habit)}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <p>No available habits to add.</p>
+                        )}
 
                         {/* Description of the selected habit */}
                         {selectedHabit ? (
@@ -525,7 +524,6 @@ function UserHabitsPage() {
                         pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
                     }}
                 >
-                    {/* TODO: Whenever user data is generated, set the first option to active */}
                     {/* Choose which habit to display */}
                     <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
                         {habits.map(habit => (
