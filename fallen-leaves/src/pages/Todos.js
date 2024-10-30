@@ -4,3 +4,6 @@
 // TODO: Make the entries table smaller, split the date and time, and explain it more
 // TODO: camelCase to title case function wherever needed
 // TODO: Separate page elements into components to reduce bulk on each page
+// TODO: Mobile font sizes too big
+// TODO: Add new habit: 
+// TODO: Prompt takes time to complete habit into account
