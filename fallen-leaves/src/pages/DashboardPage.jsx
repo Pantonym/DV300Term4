@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 // --User Service
 import { getUserProfile } from '../services/userService';
 // --Habit Service
-import { addEntryToHabit, addNewHabit, checkHabitExists, getUserHabits, getHabitById } from '../services/habitService';
+import { addNewHabit, checkHabitExists, getUserHabits, getHabitById } from '../services/habitService';
 // --Insight Service
 import { getUserInsights } from '../services/insightsService';
 // Habit info
@@ -28,7 +28,6 @@ function DashboardPage() {
     const [habitFormShow, setHabitFormShow] = useState(false);
     const [selectedHabit, setSelectedHabit] = useState('');
     const [selectedGoal, setSelectedGoal] = useState('');
-    const [entryValue, setEntryValue] = useState(0);
     // Loading Controller
     const [loading, setLoading] = useState(true);
     // Navigation
@@ -38,13 +37,10 @@ function DashboardPage() {
     const [userID, setUserID] = useState();
     const [username, setUsername] = useState("Username");
     const [habits, setHabits] = useState([]);
-    const [entries, setEntries] = useState([]);
     // Chart Data
     const [barData, setBarData] = useState(null);
     const [donutData, setDonutData] = useState([]);
     // Display Data
-    const [unit, setUnit] = useState('');
-    const [selectedHabitToAddEntry, setSelectedHabitToAddEntry] = useState('')
     const [totalProgress, setTotalProgress] = useState(0);
     const [totalGoal, setTotalGoal] = useState(0);
     const [availableHabits, setAvailableHabits] = useState([]);
@@ -119,12 +115,6 @@ function DashboardPage() {
                 const userHabits = await getUserHabits(currentUser.uid);
                 setHabits(userHabits);
 
-                // --Default habit selection
-                if (userHabits.length > 0) {
-                    setSelectedHabitToAddEntry(userHabits[0]);
-                    setUnit(habitUnits[userHabits[0].habitName]);
-                }
-
                 // Create the bar chart data
                 const chartData = createBarChartData(userHabits.slice(0, 2));
                 setBarData(chartData);
@@ -147,7 +137,7 @@ function DashboardPage() {
                 return entryDate.toLocaleDateString();
             });
             chartData.datasets.push({
-                label: habit.habitName,
+                label: convertCamelCaseToTitle(habit.habitName),
                 data: firstSixEntries.map(entry => entry.value),
                 backgroundColor: index === 0 ? 'rgba(178, 128, 167, 1)' : 'rgba(242, 160, 123, 1)',
                 borderColor: index === 0 ? 'rgba(178, 128, 167, 1)' : 'rgba(242, 160, 123, 1)',
@@ -188,13 +178,6 @@ function DashboardPage() {
         setSelectedGoal(e.target.value);
     };
 
-    // --Entry form habit select
-    const handleHabitSelect = (e) => {
-        const selectedHabit = habits.find(habit => habit.id === e.target.value);
-        setSelectedHabitToAddEntry(selectedHabit);
-        setUnit(habitUnits[selectedHabit.habitName]);
-    };
-
     // --Confirm adding a habit
     const handleHabitConfirmClick = async () => {
         // Check if a habit is selected
@@ -230,42 +213,6 @@ function DashboardPage() {
         );
         setAvailableHabits(filteredHabits);
     }, [habits]);
-
-    // SECTION: ENTRY FORM
-    // --Entry value change
-    const handleEntryValueChange = (e) => {
-        setEntryValue(e.target.value);
-    };
-
-    // --Add an entry
-    const handleAddEntrySubmissionClick = async () => {
-        console.log('User ID:', userID);
-        console.log('Habit ID:', selectedHabitToAddEntry.id);
-
-        if (entryValue <= 0) {
-            alert('Please enter a valid number.');
-            return;
-        }
-
-        try {
-            const newEntry = {
-                date: new Date(),
-                value: entryValue,
-                unit: unit
-            };
-
-            // Add the entry to the Firestore document for the selected habit
-            await addEntryToHabit(userID, selectedHabitToAddEntry.id, newEntry);
-
-            // Update the displayed entries for the selected habit
-            setEntries([...entries, newEntry]);
-            setEntryFormShow(false); // Close the form
-            alert('Entry added successfully!');
-        } catch (error) {
-            console.error('Error adding entry:', error);
-            alert('An error occurred while adding the entry. Please try again.');
-        }
-    };
 
     // SECTION Loader
     if (loading) {
@@ -325,41 +272,6 @@ function DashboardPage() {
                     </div>
                 )}
 
-                {/* FORM TO ADD AN ENTRY */}
-                {entryFormShow && (
-                    <div className={styles.habitsForm}>
-                        <h1 className={styles.fontWhite}>Add Entry (in {unit})</h1>
-
-                        {/* Dropdown to select habit */}
-                        <select
-                            value={selectedHabitToAddEntry ? selectedHabitToAddEntry.id : ''}
-                            onChange={handleHabitSelect}
-                            className={`${styles.habitSelect} lora_font`}
-                        >
-                            {habits.map(habit => (
-                                <option key={habit.id} value={habit.id}>
-                                    {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
-                                </option>
-                            ))}
-                        </select>
-
-                        {/* Input field for the entry value */}
-                        <input
-                            type='number'
-                            value={entryValue}
-                            placeholder={0}
-                            min={0}
-                            onChange={handleEntryValueChange}
-                            className={styles.sedEntry}
-                        />
-
-                        <button className='btnPrimaryDesktop' onClick={handleAddEntrySubmissionClick}>Confirm</button>
-                        <button className='btnSecondaryDesktop' style={{ color: 'white' }} onClick={() => setEntryFormShow(false)}>
-                            Cancel
-                        </button>
-                    </div>
-                )}
-
                 <div style={{
                     // --Set opacity to 50% when the forms are shown
                     opacity: habitFormShow || entryFormShow ? '50%' : '100%',
@@ -402,7 +314,7 @@ function DashboardPage() {
                     <div className={styles.row} style={{ justifyContent: 'space-between', marginBottom: '25px' }}>
                         <div className={`${styles.column} hideOnMobile`}>
                             <div className={styles.barChartCard}>
-                                <h1 className='inter_font'>Here are some insights on your habits:</h1>
+                                <h1 className='inter_font'>How the entries of two of your habits compare:</h1>
                                 {barData ? <BarChart chartData={barData} /> : <p>Loading chart data...</p>}
                             </div>
                         </div>
@@ -416,19 +328,12 @@ function DashboardPage() {
                                     </button>
                                 </div>
 
-                                <div className={styles.card} style={{ marginRight: '0px' }} onClick={() => setEntryFormShow(true)}>
-                                    <ion-icon name="add-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
+                                <div className={styles.card} onClick={handleNavigateHabitsPage}>
+                                    <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
                                     <button className={`${styles.headingButton} lora_font`}>
-                                        Add Entry
+                                        View Insights
                                     </button>
                                 </div>
-                            </div>
-
-                            <div className={styles.card} onClick={handleNavigateHabitsPage}>
-                                <ion-icon name="analytics-outline" style={{ fontSize: '75px', color: 'white' }}></ion-icon>
-                                <button className={`${styles.headingButton} lora_font`}>
-                                    View Insights
-                                </button>
                             </div>
                         </div>
                     </div>

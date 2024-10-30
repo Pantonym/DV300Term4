@@ -524,14 +524,29 @@ function UserHabitsPage() {
                         pointerEvents: habitFormShow || entryFormShow ? 'none' : 'auto',
                     }}
                 >
-                    {/* Choose which habit to display */}
-                    <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
-                        {habits.map(habit => (
-                            <option key={habit.id} value={habit.id}>
-                                {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
-                            </option>
-                        ))}
-                    </select>
+                    <div className={styles.introCard}>
+                        <h1>View your habits</h1>
+                        <h2>Add entries, view insights and view your information all in one place!</h2>
+
+                        {/* Choose which habit to display */}
+                        <select id="habitDropdown" className={`${styles.habitSelect} lora_font`} onChange={handleHabitDisplayChange}>
+                            {habits.map(habit => (
+                                <option key={habit.id} value={habit.id}>
+                                    {habit.habitName.charAt(0).toUpperCase() + habit.habitName.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Description of the selected habit */}
+                        {selectedHabitToDisplay ? (
+                            <p style={{fontSize: '18px'}}>
+                                {habitDescriptions[selectedHabitToDisplay.habitName]}
+                            </p>
+                        ) : (
+                            // Spacer that stops rendering when the text is visible
+                            <div className={styles.addHabitSpacer}></div>
+                        )}
+                    </div>
 
                     {/* Display the entries of that habit */}
                     <table className={styles.table}>
