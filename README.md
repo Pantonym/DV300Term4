@@ -464,7 +464,7 @@ Fallen Leaves was designed to evoke feelings of Autumn. This is meant to tie it 
 
 <!-- Video Demonstration -->
 ### Video Demonstration
-**Video Demonstration:** <a href="">Google Drive Link</a>
+**Video Demonstration:** <a href="https://drive.google.com/drive/folders/1mlqiFTQRIYItin67QLQkBOuZwRfMbBLK?usp=sharing">Google Drive Link</a>
 
 <!-- LICENSE -->
 ## License
@@ -485,6 +485,7 @@ This repository is proprietary and distributed with all rights reserved. Use, co
 * [Figma](https://www.figma.com/), for interface design.
 * [Firebase](https://firebase.google.com/docs/firestore/), for providing documentation on data management.
 * [ChatGPT](https://chatgpt.com), for help with debugging.
+* [OpenAI](https://openai.com), for supplying documentation on API implementation.
 
 ## References
 * [Link](https://www.google.com/url?sa=i&url=https%3A%2F%2Flogos-world.net%2Freact-logo%2F&psig=AOvVaw2P245paSsFyJN9zdGsBKdK&ust=1731254259875000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCKD1j-7Oz4kDFQAAAAAdAAAAABAE) (React Web Logo)
