@@ -83,6 +83,8 @@
 
     background-color: #D75B30;
     border: 0px;
+
+    cursor: pointer;
 }
 
 @media (max-width: 975px) {

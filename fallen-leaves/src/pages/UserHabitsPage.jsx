@@ -383,7 +383,7 @@ function UserHabitsPage() {
 
             // --Create the first pie chart for habit progress based on the insight data
             const pieChartData1 = {
-                labels: ['Completed', 'Remaining'],
+                labels: ['Completed %', 'Remaining %'],
                 datasets: [{
                     data: [completionPercentage, remainingPercentage],
                     backgroundColor: ['rgba(225, 173, 1, 0.6)', 'rgba(125, 5, 65, 0.6)'],
@@ -539,7 +539,7 @@ function UserHabitsPage() {
 
                         {/* Description of the selected habit */}
                         {selectedHabitToDisplay ? (
-                            <p style={{fontSize: '18px'}}>
+                            <p style={{ fontSize: '18px' }}>
                                 {habitDescriptions[selectedHabitToDisplay.habitName]}
                             </p>
                         ) : (
@@ -549,31 +549,43 @@ function UserHabitsPage() {
                     </div>
 
                     {/* Display the entries of that habit */}
+                    {/* Display the entries of that habit */}
                     <table className={styles.table}>
                         <thead className='lora_font'>
                             <tr>
-                                <th>Entry Date/Time</th>
+                                <th>Entry Date</th>
+                                <th>Entry Time</th>
                                 <th>Entry Data</th>
                             </tr>
                         </thead>
                         <tbody className='inter_font'>
                             {entries.length > 0 ? (
-                                entries.map((entry, index) => (
-                                    <tr key={index}>
-                                        <td>
-                                            {entry.date.toDate ? new Date(entry.date.toDate()).toLocaleString() : new Date(entry.date).toLocaleString()}
-                                        </td>
-                                        <td>{entry.value} {entry.unit}</td>
-                                    </tr>
-                                ))
+                                entries.map((entry, index) => {
+                                    const dateTime = entry.date.toDate ? entry.date.toDate() : new Date(entry.date);
+                                    // Format the date as "Day MonthName Year"
+                                    const entryDate = dateTime.toLocaleDateString('en-US', {
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year: 'numeric'
+                                    });
+                                    const entryTime = dateTime.toLocaleTimeString();
+
+                                    return (
+                                        <tr key={index}>
+                                            <td>{entryDate}</td>
+                                            <td>{entryTime}</td>
+                                            <td>{entry.value} {entry.unit}</td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
-                                    <td colSpan="2">No entries for this habit.</td>
+                                    <td colSpan="3">No entries for this habit.</td>
                                 </tr>
                             )}
 
                             <tr>
-                                <td colSpan="2" className={styles.btnRow}>
+                                <td colSpan="3" className={styles.btnRow}>
                                     <button className={styles.btnAllEntries} onClick={handleViewAllEntries}>
                                         View All Entries
                                     </button>
@@ -598,11 +610,15 @@ function UserHabitsPage() {
             <div>
                 <div className={styles.bodyBG}></div>
                 <div className={styles.container}>
+
+                    <h1 className={styles.currentGoalAmount}>Your current goal: {selectedInsightToDisplay.suggestedGoal}</h1>
                     <div className={styles.pies}>
                         <div className={styles.pieChart}>
                             {pieData1 ? <PieChart chartData={pieData1} /> : <p>Loading chart data...</p>}
                         </div>
+
                         <span style={{ width: '50px', height: '50px' }}></span>
+
                         <div className={styles.pieChart}>
                             {pieData2 ? <PieChart chartData={pieData2} /> : <p>Loading chart data...</p>}
                         </div>

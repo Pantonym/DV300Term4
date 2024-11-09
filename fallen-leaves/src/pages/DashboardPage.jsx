@@ -282,7 +282,7 @@ function DashboardPage() {
                         <div className={styles.welcomeCard}>
                             <div className={styles.column}>
                                 <h1 className={styles.blackFont}>Hi, {username}</h1>
-                                <p style={{ fontSize: '20px' }}>Welcome back to your dashboard, we're glad to see you again! </p>
+                                <p style={{ fontSize: '20px' }}>Welcome back to your dashboard, we're glad to see you! </p>
                                 <p style={{ fontSize: '18px' }}>With Fallen Leaves you can track your habits, log entries, and gain insights into your progress. You can add new habits, monitor your improvements, and receive achievable goals based on personalized insights. Let's get started!</p>
                             </div>
 
@@ -297,7 +297,7 @@ function DashboardPage() {
                                 {totalProgress > 0 && totalGoal > 0 && (
                                     <PieChart
                                         chartData={{
-                                            labels: ['', ''],
+                                            labels: ['Completed %', ''],
                                             datasets: [{
                                                 data: [totalProgress, totalGoal],
                                                 backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],

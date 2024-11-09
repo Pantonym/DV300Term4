@@ -231,15 +231,20 @@
 }
 
 /* SECTION: INSIGHTS PAGE CSS */
-/* DROPDOWN */
+.currentGoalAmount {
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 15px;
+
+    padding: 10px 25px 10px 25px;
+}
+
 .pies {
     width: auto;
     height: auto;
 
     display: flex;
     flex-direction: row;
-
-    margin-top: 50px;
 
     background-color: #F6DFB1;
     border: 4px solid #F6DFB1;
