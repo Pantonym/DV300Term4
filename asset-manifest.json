@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/DV300Term4/static/css/main.d86627d8.css",
-    "main.js": "/DV300Term4/static/js/main.10f742da.js",
+    "main.css": "/DV300Term4/static/css/main.a4969f61.css",
+    "main.js": "/DV300Term4/static/js/main.417776ae.js",
     "static/js/453.7ad270d4.chunk.js": "/DV300Term4/static/js/453.7ad270d4.chunk.js",
     "static/media/backgroundDashboard.jpg": "/DV300Term4/static/media/backgroundDashboard.add55ec0ec0b49226e64.jpg",
     "static/media/backgroundLogin.jpg": "/DV300Term4/static/media/backgroundLogin.cce77d6978f23cabf64e.jpg",
     "static/media/AppIcon.png": "/DV300Term4/static/media/AppIcon.f684fa4cf22b6c3a726b.png",
     "static/media/dashboardImage.png": "/DV300Term4/static/media/dashboardImage.345d4fc836b3b6c07311.png",
     "index.html": "/DV300Term4/index.html",
-    "main.d86627d8.css.map": "/DV300Term4/static/css/main.d86627d8.css.map",
-    "main.10f742da.js.map": "/DV300Term4/static/js/main.10f742da.js.map",
+    "main.a4969f61.css.map": "/DV300Term4/static/css/main.a4969f61.css.map",
+    "main.417776ae.js.map": "/DV300Term4/static/js/main.417776ae.js.map",
     "453.7ad270d4.chunk.js.map": "/DV300Term4/static/js/453.7ad270d4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d86627d8.css",
-    "static/js/main.10f742da.js"
+    "static/css/main.a4969f61.css",
+    "static/js/main.417776ae.js"
   ]
 }
