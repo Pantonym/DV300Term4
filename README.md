@@ -31,6 +31,7 @@
 </div>
 <!-- Subject and Term -->
 <h6 align="center">DV300 | Term 4</h6>
+<h6 align="center"><a href="https://pantonym.github.io/DV300Term4/">Deployment Link</a></h6>
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -54,6 +55,7 @@
   - [Solution](#solution)
   - [Theme](#theme)
   - [Development Documents](#development-documents)
+  - [Peer Reviews](#peer-reviews)
     - [Highlights](#highlights)
     - [Challenges](#challenges)
   - [Future Implementation](#future-implementation)
@@ -88,7 +90,7 @@ Fallen Leaves is a habit tracking web application where users can add entries to
 * Uses components to render the front end.
 * Used for responsive development.
 <p>React Web was used to build the front end.</p>
-<img src="fallen-leaves/readmeAssets/react.png" alt="React_Logo" style="width: 200px; height: auto" />
+<img src="fallen-leaves/readmeAssets/React.png" alt="React_Logo" style="width: 200px; height: auto" />
 
 <!-- OpenAI -->
 #### OpenAI API
@@ -419,25 +421,36 @@ Fallen Leaves was designed to evoke feelings of Autumn. This is meant to tie it 
 * Initial Wireframes
 [Google Drive Folder](https://drive.google.com/drive/folders/1ds77uGPMgETMYpSploQ_1Hho1pgSzN-B?usp=sharing)
 
+<!-- Peer reviews -->
+### Peer Reviews
+* Peer reviews were conducted to help improve the application. The feedback provided was implemented, as well as feedback provided from the lecturer during contact sessions.
+
+<img src="fallen-leaves/readmeAssets/Responses1.png" alt="Responses1" style="height: 600px">
+
+<img src="fallen-leaves/readmeAssets/Responses2.png" alt="Responses2" style="height: 600px">
+
+<img src="fallen-leaves/readmeAssets/Responses3.png" alt="Responses3" style="height: 600px">
+
 <!-- Highlights -->
 #### Highlights
-* 
-* 
-* 
-* 
+* The largest highlight was that we were given nearly complete creative control over the project, and were able to manage it like a project in the real world.
+* Learning about neural networks was very interesting.
+* Seeing AI return data in real time with a deployed application was very interesting.
+* Using React Web after the React Native project in Term 2 was very fun as I have a passion for React.
 
 <!-- Challenges -->
 <!-- Explain the challenges faced with the project and why you think you faced it or how you think you'll solve it (if not solved), or how you solved it -->
 #### Challenges
-* 
-* 
-* 
-* 
+* Finding the correct AI to use for this project was a challenge. Many free options were not compatible with the project setup, and eventually I chose to use OpenAI despite it being a paid method.
+* Securing the API Key for OpenAI was also a challenge as deploying through Github Pages and React Web revealed the secrets in my ENV file - I had to find a new way to secure it for deployment.
+* It was also a challenge to not overreach. I had many ideas to add to the project, but I had to pace myself to ensure the basic functionality was complete first, before I added more.
+* I also had to refactor the project - both to improve the UI and to combine pages with similar functionality.
 
 <!-- Future Implementation -->
 ### Future Implementation
-* 
-* A
+* Users can add their own measurements to each entry
+* Users can add their own habits
+* A detailed new user guide through the app
 
 <!-- Final Outcome -->
 ## Final Outcome
@@ -455,7 +468,7 @@ Fallen Leaves was designed to evoke feelings of Autumn. This is meant to tie it 
 
 <!-- LICENSE -->
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+This repository is proprietary and distributed with all rights reserved. Use, copying, modification, or distribution of this software is prohibited without explicit permission from Nico van Wyk. 
 
 <!-- AUTHORS -->
 ## Authors
