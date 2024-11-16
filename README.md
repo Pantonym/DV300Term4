@@ -391,7 +391,7 @@ try {
 ```
 
 
-<!-- Development PROCESS -->
+<!-- DEVELOPMENT PROCESS -->
 ## Development Process
 ### Architecture
 The application consists of multiple React Web pages and components. It communicates with a NoSQL database to receive and send information. `Firebase.js` was created to contact the database, and service files handled functionality. Finally, OpenAI API was contacted to implement AI-generated insights and goals.
@@ -459,12 +459,15 @@ Fallen Leaves was designed to evoke feelings of Autumn. This is meant to tie it 
 <img src="fallen-leaves/readmeAssets/mockups/Mockup01.png" alt="Mockup" style="height: 600px"/>
 <img src="fallen-leaves/readmeAssets/mockups/Mockup02.png" alt="Mockup" style="height: 600px"/>
 <img src="fallen-leaves/readmeAssets/mockups/Mockup03.png" alt="Mockup" style="height: 600px"/>
+<img src="fallen-leaves/readmeAssets/mockups/Poster1.png" alt="Poster" style="height: 600px"/>
+<img src="fallen-leaves/readmeAssets/mockups/Poster2.png" alt="Poster" style="height: 600px"/>
 
 <br>
 
 <!-- Video Demonstration -->
 ### Video Demonstration
 **Video Demonstration:** <a href="https://drive.google.com/drive/folders/1mlqiFTQRIYItin67QLQkBOuZwRfMbBLK?usp=sharing">Google Drive Link</a>
+**Demo Video:** <a href="https://youtu.be/i3ciczWsOGw">Youtube Link</a>
 
 <!-- LICENSE -->
 ## License
